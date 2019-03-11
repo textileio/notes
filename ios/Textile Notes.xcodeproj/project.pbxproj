@@ -30,6 +30,7 @@
 		B71B5258E9F640C9A517090C /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA9793EAE75E462C86E2A11B /* TSBackgroundFetch.framework */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		F29CCA3D6181435E9B8B11E2 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 083A85397F58457A82B1B990 /* libRNFS.a */; };
+		F678D23F98C446AAAFB9AB12 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98CB1267ADB543149E09E945 /* libReactNativeConfig.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -327,6 +328,20 @@
 			remoteGlobalIDString = 835318541D52293F005738CD;
 			remoteInfo = RNBackgroundFetch;
 		};
+		A2B317A12236E73E00BF1C11 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2282D41036E547CE96DA1C2C /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
+			remoteInfo = ReactNativeConfig;
+		};
+		A2B317A32236E73E00BF1C11 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2282D41036E547CE96DA1C2C /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3DF7F6AC203AA09B00D0EAB7;
+			remoteInfo = "ReactNativeConfig-tvOS";
+		};
 		ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
@@ -355,6 +370,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = TApp/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		15DF5F880B7E4379AD01A4C4 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		2282D41036E547CE96DA1C2C /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		277F2556B92C457192C48FD6 /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundFetch.a; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -363,6 +379,7 @@
 		7E0F1169B76341F885F490B6 /* RNTextile.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNTextile.xcodeproj; path = "../node_modules/@textile/react-native-sdk/ios/RNTextile.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		88C11B53611E41DA9F9BCB55 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
+		98CB1267ADB543149E09E945 /* libReactNativeConfig.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeConfig.a; sourceTree = "<group>"; };
 		A2B317562236B64000BF1C11 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		A2B3175C2236B83B00BF1C11 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -395,6 +412,7 @@
 				F29CCA3D6181435E9B8B11E2 /* libRNFS.a in Frameworks */,
 				3ADA7CC878FE4CDC842A051D /* libRNBackgroundFetch.a in Frameworks */,
 				B71B5258E9F640C9A517090C /* TSBackgroundFetch.framework in Frameworks */,
+				F678D23F98C446AAAFB9AB12 /* libReactNativeConfig.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,6 +567,7 @@
 				7E0F1169B76341F885F490B6 /* RNTextile.xcodeproj */,
 				6E4D259CEF684F6F902F9D00 /* RNBackgroundTimer.xcodeproj */,
 				15DF5F880B7E4379AD01A4C4 /* RNFS.xcodeproj */,
+				2282D41036E547CE96DA1C2C /* ReactNativeConfig.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -599,6 +618,7 @@
 				88C11B53611E41DA9F9BCB55 /* libRNBackgroundTimer.a */,
 				083A85397F58457A82B1B990 /* libRNFS.a */,
 				277F2556B92C457192C48FD6 /* libRNBackgroundFetch.a */,
+				98CB1267ADB543149E09E945 /* libReactNativeConfig.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -633,6 +653,15 @@
 			isa = PBXGroup;
 			children = (
 				A2B317612236B83B00BF1C11 /* libRNBackgroundFetch.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A2B3179D2236E73D00BF1C11 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A2B317A22236E73E00BF1C11 /* libReactNativeConfig.a */,
+				A2B317A42236E73E00BF1C11 /* libReactNativeConfig-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -745,6 +774,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = A2B3179D2236E73D00BF1C11 /* Products */;
+					ProjectRef = 2282D41036E547CE96DA1C2C /* ReactNativeConfig.xcodeproj */;
 				},
 				{
 					ProductGroup = A2B3175D2236B83B00BF1C11 /* Products */;
@@ -1065,6 +1098,20 @@
 			remoteRef = A2B317602236B83B00BF1C11 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		A2B317A22236E73E00BF1C11 /* libReactNativeConfig.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeConfig.a;
+			remoteRef = A2B317A12236E73E00BF1C11 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A2B317A42236E73E00BF1C11 /* libReactNativeConfig-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libReactNativeConfig-tvOS.a";
+			remoteRef = A2B317A32236E73E00BF1C11 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1147,11 +1194,13 @@
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/**",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				INFOPLIST_FILE = TApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
+					"\"$(SRCROOT)/Textile Notes\"",
 					"\"$(SRCROOT)/Textile Notes\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1182,11 +1231,13 @@
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/**",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				INFOPLIST_FILE = TApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/@textile/go-mobile/dist/ios/**",
+					"\"$(SRCROOT)/Textile Notes\"",
 					"\"$(SRCROOT)/Textile Notes\"",
 				);
 				OTHER_LDFLAGS = (

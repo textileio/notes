@@ -3,6 +3,7 @@ package com.tapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.rnfs.RNFSPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeConfigPackage(),
             new RNBackgroundFetchPackage(),
             new RNFSPackage(),
             new BackgroundTimerPackage(),

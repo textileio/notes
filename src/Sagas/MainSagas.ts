@@ -5,7 +5,9 @@ import { put, all, call, take, select } from 'redux-saga/effects'
 import * as RNFS from 'react-native-fs'
 import { API, pb } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
-import { PROMISE, API_URL } from 'react-native-dotenv'
+import Config from 'react-native-config'
+
+const { PROMISE, API_URL } = Config
 
 const JSON_SCHEMA = {
   name: 'notes',

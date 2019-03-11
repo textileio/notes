@@ -128,6 +128,7 @@ class Home extends Component<Props> {
             blurOnSubmit={true}
             autoCapitalize={'none'}
             keyboardType={'email-address'}
+            dataDetectorTypes={'all'}
           />
           <TouchableOpacity
             disabled={!enabled}
