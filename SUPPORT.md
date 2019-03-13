@@ -12,3 +12,8 @@ If you have not created an issue on GitHub before, [here is a guide](https://hel
 
 You can ask us questions or leave us comments by writing to [contact@textile.io](mailto:contact@textile.io) or starting a discussion with [@Textile01Help on Twitter](https://twitter.com/textile01help).
 
+### App Updates
+
+The latest releases will always be available through the the official stores:
+
+[Android release](https://play.google.com/store/apps/details?id=io.textile.notes)
