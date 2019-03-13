@@ -6,6 +6,12 @@
 - Privacy. We don't track anything about you except your email address for delivering your notes. We don't collect metrics outside those provided by iOS and Android app stores, and we don't plan to change that.
 - Function. Your best ideas come whenever they want. Textile Note gives you the ability to capture those ideas without interupting your thoughts or conversations. Minimal and easy to use.
 
+## Available on the Google Play store
+
+[Grab the Android release](https://play.google.com/store/apps/details?id=io.textile.notes)
+
+## More info
+
 [Support](SUPPORT.md)
 
 [Privacy](PRIVACY.md)
