@@ -1,5 +1,7 @@
 # Textile Note
 
+![promo](https://user-images.githubusercontent.com/370259/54317359-20453080-45a0-11e9-8cd4-9313eaa6d276.png)
+
 **Why another notes app?**
 
 - Simplicity. Textile Note is a single screen app that let's you take a note and save it to your device + have it delivered to your inbox with a single swipe.
