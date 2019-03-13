@@ -1,6 +1,6 @@
-# Textile Note
-
 ![promo](https://user-images.githubusercontent.com/370259/54317359-20453080-45a0-11e9-8cd4-9313eaa6d276.png)
+
+# Textile Notes
 
 **Why another notes app?**
 
