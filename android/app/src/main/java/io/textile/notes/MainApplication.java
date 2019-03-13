@@ -1,4 +1,4 @@
-package com.tapp;
+package io.textile.notes;
 
 import android.app.Application;
 

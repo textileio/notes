@@ -113,34 +113,40 @@ export function * nodeStarted(action: ActionType<typeof MainActions.nodeStarted>
 }
 
 export function * submitNewNote(action: ActionType<typeof MainActions.submitNote>) {
-  console.info('Running newNodeState Saga')
   try {
     yield call(postNoteToThread, action)
   } finally {
-    // TODO: Add Note to Textile
     yield put(MainActions.uploadAllNotes())
   }
 }
 
 export function * uploadANote(note: string) {
   const email = yield select(MainSelectors.email)
+  if (!email) {
+    return
+  }
   const param = {
     email,
     message: note,
     promise: PROMISE
   }
-  const response = yield call (fetch, API_URL, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'text/html'
-    },
-    body: JSON.stringify(param)
-  })
-  if (response.status === 200) {
-    yield put(MainActions.uploadSuccess(note))
-  } else {
-    console.info('axh', response.status)
+  try {
+    const response = yield call (fetch, API_URL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'text/html'
+      },
+      body: JSON.stringify(param)
+    })
+    if (response.status === 200) {
+      console.info('axh', response.status)
+      yield put(MainActions.uploadSuccess(note))
+    } else {
+      console.info('axh', response.status)
+    }
+  } catch (error) {
+    console.info('axh error', error.message)
   }
 }
 export function * uploadAllNotes() {
@@ -148,7 +154,6 @@ export function * uploadAllNotes() {
     try {
       const notes = yield select(MainSelectors.notes)
       for (const note of notes) {
-        // TODO: email note
         yield call(uploadANote, note)
       }
     } catch (error) {

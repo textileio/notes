@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "@textile/react-native-sdk": "1.1.0-rc35",
+    "@textile/react-native-sdk": "1.1.0-rc39",
     "buffer": "^5.2.1",
     "react": "^16.6.3",
     "react-native": "^0.57.2",

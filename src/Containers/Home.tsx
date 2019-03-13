@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { ScrollView, View, Text, TextInput, NativeSyntheticEvent, NativeScrollEvent, TouchableOpacity, FlatList, Keyboard, Dimensions } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, FlatList, Keyboard, Dimensions } from 'react-native'
 import { RootAction, RootState } from '../Redux/Types'
 import Drawer from 'react-native-drawer'
-import Hyperlink from 'react-native-hyperlink'
-// import GestureRecognizer from 'react-native-swipe-gestures'
 import SwipeScroll from './Swipe'
 import styles from './Styles'
 import { NodeState } from '@textile/react-native-sdk'
@@ -138,9 +136,7 @@ class Home extends Component<Props> {
             <Text style={[styles.submit, enabled && styles.enabled]}>Save</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.poweredBy}>
-          <Text style={styles.credit}>textile.io</Text>
-        </View>
+        <View style={styles.poweredBy} />
       </View>
     )
   }
