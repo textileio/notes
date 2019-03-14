@@ -224,9 +224,10 @@ class Home extends Component<Props> {
                 onChangeText={this.setNote()}
                 value={this.state.note}
                 editable={true}
-                autoFocus={true}
+                autoFocus={this.props.email !== undefined}
                 multiline={true}
                 maxLength={2000}
+                placeholder={this.props.previewText}
                 returnKeyType='next'
               />
             </SwipeScroll>
@@ -245,7 +246,7 @@ class Home extends Component<Props> {
         style={styles.publicLink}
         onPress={this.openPublicLink}
       >
-        <Text style={{color: '#2935ff', fontSize: 40}}>🌐</Text>
+        <Text style={{color: '#2935ff', fontSize: 30}}>🌐</Text>
       </TouchableOpacity>
     )
   }
@@ -254,12 +255,11 @@ class Home extends Component<Props> {
       <View
         style={styles.publicLink}
       >
-        <Image source={require('../static/loading.gif')} style={{width: 25, height: 50}}/>
+        <Image source={require('../static/loading.gif')} style={{width: 30, height: 30}}/>
       </View>
     )
   }
   openPublicLink = () => {
-    console.log('axh clearrry')
     if (this.props.publicNoteUrl !== undefined) {
       this.props.clearPublicNote()
       Linking.openURL(this.props.publicNoteUrl)
@@ -269,6 +269,7 @@ class Home extends Component<Props> {
 
 interface StateProps {
   nodeState: NodeState
+  previewText: string
   storedNotes: string[]
   email?: string
   publicNoteUrl?: string
@@ -276,9 +277,8 @@ interface StateProps {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  console.log('axh', state.main.publishingNote)
-  console.log('axh', state.main.publicNoteUrl)
   return {
+    previewText: state.main.onboarding ? '\n\n\nswipe ^ up ^ saves ^ to ^ inbox\n\n~~shake~~stores~~on~~ipfs~~\n\n>>>> drag out shows old notes' : '',
     nodeState: state.main.nodeState,
     email: state.main.email,
     storedNotes: state.main.storedNotes,

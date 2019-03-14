@@ -1,4 +1,4 @@
-import { takeLatest, race, put, all, call, take, select, delay } from 'redux-saga/effects'
+import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import MainActions, { MainSelectors } from '../Redux/MainRedux'
 import * as RNFS from 'react-native-fs'
@@ -225,25 +225,18 @@ export function * createPublicNote(action: ActionType<typeof MainActions.submitN
   }
 }
 
+export function * forkFetch(url: string) {
+  const response = yield call(fetch, url)
+  if (response.status === 200) {
+    yield put(MainActions.publicNoteSuccess())
+  }
+}
 export function * publishPublicNote(url: string) {
   try {
-    const {response, timeout} = yield race({
-      response: call(fetch, url),
-      timeout: delay(11000)
-    })
-    if (response) {
-      if (response.status === 200) {
-        console.info('axh fetch', response.status)
-        yield put(MainActions.publicNoteSuccess())
-      } else {
-        console.info('axh fetch', response.status)
-        yield put(MainActions.publicNoteFailure())
-      }
-    } else {
-      yield put(MainActions.publicNoteSuccess())
-    }
+    yield fork(forkFetch, url)
+    yield delay(11000)
+    yield put(MainActions.publicNoteSuccess())
   } catch (error) {
     yield put(MainActions.publicNoteFailure())
-    console.info('axh', error.message)
   }
 }

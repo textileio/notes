@@ -40,6 +40,7 @@ const actions = {
 export type MainActions = ActionType<typeof actions>
 
 export interface MainState {
+  onboarding: boolean
   appThread?: pb.IThread
   publicThread?: pb.IThread
   nodeState: NodeState
@@ -51,6 +52,7 @@ export interface MainState {
 }
 
 const initialState: MainState = {
+  onboarding: true,
   nodeState: NodeState.nonexistent,
   notes: [],
   storedNotes: []
@@ -68,19 +70,19 @@ export function reducer(state = initialState, action: MainActions) {
       return { ...state, storedNotes: action.payload.notes, publishingNote: false }
     }
     case getType(actions.publicNoteSuccess): {
-      return { ...state,  publishingNote: false }
+      return { ...state, publishingNote: false }
     }
     case getType(actions.publishNoteStarting): {
-      return { ...state, publicNoteUrl: action.payload.url, publishingNote: true }
+      return { ...state, onboarding: false, publicNoteUrl: action.payload.url, publishingNote: true }
     }
     case getType(actions.publicNoteFailure): {
-      return { ...state, publicNoteUrl: undefined, publishingNote: false}
+      return { ...state, publishingNote: false}
     }
     case getType(actions.publicNoteComplete): {
       return { ...state, publicNoteUrl: undefined, publishingNote: false }
     }
     case getType(actions.submitNote): {
-      return { ...state, notes: [action.payload.note, ...state.notes] }
+      return { ...state, onboarding: false, notes: [action.payload.note, ...state.notes] }
     }
     case getType(actions.uploadSuccess): {
       return { ...state, notes: state.notes.filter((note) => note !== action.payload.note) }
