@@ -10,6 +10,15 @@ const actions = {
   submitNote: createAction('SUBMIT_NOTE', (resolve) => {
     return (note: string) => resolve({ note })
   }),
+  publicNote: createAction('PUBLIC_NOTE', (resolve) => {
+    return (note: string) => resolve({ note })
+  }),
+  publishNoteStarting: createAction('PUBLISH_NOTE_STARTING', (resolve) => {
+    return (url: string) => resolve({ url })
+  }),
+  publicNoteSuccess: createAction('PUBLIC_NOTE_SUCCESS'),
+  publicNoteFailure: createAction('PUBLIC_NOTE_FAILURE'),
+  publicNoteComplete: createAction('PUBLIC_NOTE_COMPLETE'),
   uploadSuccess: createAction('SUBMIT_SUCCESS', (resolve) => {
     return (note: string) => resolve({ note })
   }),
@@ -20,6 +29,9 @@ const actions = {
   getThreadSuccess: createAction('GET_APP_THREAD_SUCCESS', (resolve) => {
     return (appThread: pb.IThread) => resolve({ appThread })
   }),
+  getPublicThreadSuccess: createAction('GET_PUBLIC_THREAD_SUCCESS', (resolve) => {
+    return (publicThread: pb.IThread) => resolve({ publicThread })
+  }),
   setEmail: createAction('SET_EMAIL', (resolve) => {
     return (email: string) => resolve({ email })
   })
@@ -29,10 +41,13 @@ export type MainActions = ActionType<typeof actions>
 
 export interface MainState {
   appThread?: pb.IThread
+  publicThread?: pb.IThread
   nodeState: NodeState
   storedNotes: string[]
   notes: string[]
   email?: string
+  publicNoteUrl?: string
+  publishingNote?: boolean
 }
 
 const initialState: MainState = {
@@ -50,7 +65,19 @@ export function reducer(state = initialState, action: MainActions) {
       return { ...state, email: action.payload.email }
     }
     case getType(actions.setNotes): {
-      return { ...state, storedNotes: action.payload.notes }
+      return { ...state, storedNotes: action.payload.notes, publishingNote: false }
+    }
+    case getType(actions.publicNoteSuccess): {
+      return { ...state,  publishingNote: false }
+    }
+    case getType(actions.publishNoteStarting): {
+      return { ...state, publicNoteUrl: action.payload.url, publishingNote: true }
+    }
+    case getType(actions.publicNoteFailure): {
+      return { ...state, publicNoteUrl: undefined, publishingNote: false}
+    }
+    case getType(actions.publicNoteComplete): {
+      return { ...state, publicNoteUrl: undefined, publishingNote: false }
     }
     case getType(actions.submitNote): {
       return { ...state, notes: [action.payload.note, ...state.notes] }
@@ -60,6 +87,8 @@ export function reducer(state = initialState, action: MainActions) {
     }
     case getType(actions.getThreadSuccess):
       return { ...state, appThread: action.payload.appThread }
+      case getType(actions.getPublicThreadSuccess):
+        return { ...state, publicThread: action.payload.publicThread }
     default:
       return state
   }
@@ -68,7 +97,9 @@ export function reducer(state = initialState, action: MainActions) {
 export const MainSelectors = {
   nodeState: (state: RootState) => state.main.nodeState,
   getAppThread: (state: RootState) => state.main.appThread,
+  getPublicThread: (state: RootState) => state.main.publicThread,
   notes: (state: RootState) => state.main.notes,
-  email: (state: RootState) => state.main.email
+  email: (state: RootState) => state.main.email,
+  getPublicUrl: (state: RootState) => state.main.publicNoteUrl
 }
 export default actions

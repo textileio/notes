@@ -29,6 +29,7 @@ interface Style {
   notesBox: ViewStyle
   note: ViewStyle
   noteText: TextStyle
+  publicLink: ViewStyle
 }
 
 const styles = StyleSheet.create<Style>({
@@ -143,6 +144,16 @@ const styles = StyleSheet.create<Style>({
     ...systemWeights.regular,
     fontSize: 14,
     color: '#2b2b2b'
+  },
+  publicLink: {
+    position: 'absolute',
+    top: 40,
+    right: 0,
+    backgroundColor: 'white',
+    height: 100,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 

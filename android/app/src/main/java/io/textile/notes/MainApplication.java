@@ -3,6 +3,7 @@ package io.textile.notes;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.clipsub.RNShake.RNShakeEventPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.rnfs.RNFSPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNShakeEventPackage(),
             new ReactNativeConfigPackage(),
             new RNBackgroundFetchPackage(),
             new RNFSPackage(),

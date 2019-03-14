@@ -20,6 +20,7 @@
     "react-native-drawer": "^2.5.1",
     "react-native-fs": "^2.11.17",
     "react-native-responsive-fontsize": "^0.1.8",
+    "react-native-shake": "^3.3.0",
     "react-native-typography": "^1.4.0",
     "react-navigation": "^3.2.3",
     "react-redux": "^6.0.0",

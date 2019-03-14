@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { View, Text, TextInput, TouchableOpacity, FlatList, Keyboard, Dimensions } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, FlatList, Keyboard, Dimensions, Alert, Linking, Image } from 'react-native'
 import { RootAction, RootState } from '../Redux/Types'
 import Drawer from 'react-native-drawer'
+import RNShake from 'react-native-shake'
 import SwipeScroll from './Swipe'
 import styles from './Styles'
 import { NodeState } from '@textile/react-native-sdk'
@@ -46,6 +47,31 @@ class Home extends Component<Props> {
     } else {
       this._noteInput.focus()
     }
+  }
+
+  componentWillMount() {
+    RNShake.addEventListener('ShakeEvent', () => {
+      if (this.state.note !== '') {
+        Alert.alert(
+          'Create Ephemeral IPFS Link',
+          'Cannot be undone.',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel'
+            },
+            {text: 'Confirm', onPress: () => {
+              this.props.publicNote(this.state.note)
+            }}
+          ],
+          {cancelable: true}
+        )
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    RNShake.removeEventListener('ShakeEvent')
   }
 
   saveEmail = () => {
@@ -207,8 +233,37 @@ class Home extends Component<Props> {
             <View style={{flex: 1,  backgroundColor: 'white'}}/>
           </View>
         </Drawer>
+        {!this.props.publishingNote && this.props.publicNoteUrl && this.renderNoteLink()}
+        {this.props.publishingNote && this.renderNoteLoading()}
       </View>
     )
+  }
+
+  renderNoteLink = () => {
+    return (
+      <TouchableOpacity
+        style={styles.publicLink}
+        onPress={this.openPublicLink}
+      >
+        <Text style={{color: '#2935ff', fontSize: 40}}>🌐</Text>
+      </TouchableOpacity>
+    )
+  }
+  renderNoteLoading = () => {
+    return (
+      <View
+        style={styles.publicLink}
+      >
+        <Image source={require('../static/loading.gif')} style={{width: 25, height: 50}}/>
+      </View>
+    )
+  }
+  openPublicLink = () => {
+    console.log('axh clearrry')
+    if (this.props.publicNoteUrl !== undefined) {
+      this.props.clearPublicNote()
+      Linking.openURL(this.props.publicNoteUrl)
+    }
   }
 }
 
@@ -216,25 +271,35 @@ interface StateProps {
   nodeState: NodeState
   storedNotes: string[]
   email?: string
+  publicNoteUrl?: string
+  publishingNote?: boolean
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  console.log('axh', state.main.publishingNote)
+  console.log('axh', state.main.publicNoteUrl)
   return {
     nodeState: state.main.nodeState,
     email: state.main.email,
-    storedNotes: state.main.storedNotes
+    storedNotes: state.main.storedNotes,
+    publicNoteUrl: state.main.publicNoteUrl,
+    publishingNote: state.main.publishingNote
   }
 }
 
 interface DispatchProps {
+  publicNote: (note: string) => void
   submitNote: (note: string) => void
   setEmail: (email: string) => void
+  clearPublicNote: () => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
+    publicNote: (note: string) => { dispatch(MainActions.publicNote(note)) },
     submitNote: (note: string) => { dispatch(MainActions.submitNote(note)) },
-    setEmail: (email: string) => { dispatch(MainActions.setEmail(email)) }
+    setEmail: (email: string) => { dispatch(MainActions.setEmail(email)) },
+    clearPublicNote: () => { dispatch(MainActions.publicNoteComplete()) }
   }
 }
 
