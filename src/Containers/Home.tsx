@@ -7,7 +7,7 @@ import Drawer from 'react-native-drawer'
 import SwipeScroll from './Swipe'
 import styles from './Styles'
 import { NodeState } from '@textile/react-native-sdk'
-import MainActions, { Note } from '../Redux/MainRedux'
+import MainActions from '../Redux/MainRedux'
 
 interface ScreenState {
   note: string
@@ -68,16 +68,15 @@ class Home extends Component<Props> {
     }
     return this.notesHistory()
   }
-  keyExtractor = (item: Note, index: number) => String(index)
+  keyExtractor = (item: string, index: number) => String(index)
   renderNote = ({item}) => {
     // todo: indicate which are not sent yet
-    // const display = item.timestamp === -1 ? `${item.note}` : item.note
     return (
       <TouchableOpacity
         style={styles.note}
-        onPress={this.setNoteText(item.note)}
+        onPress={this.setNoteText(item)}
       >
-        <Text style={styles.noteText}>{item.note}</Text>
+        <Text style={styles.noteText}>{item}</Text>
       </TouchableOpacity>
     )
   }
@@ -215,7 +214,7 @@ class Home extends Component<Props> {
 
 interface StateProps {
   nodeState: NodeState
-  storedNotes: Note[]
+  storedNotes: string[]
   email?: string
 }
 

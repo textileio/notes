@@ -14,7 +14,7 @@ const actions = {
     return (note: string) => resolve({ note })
   }),
   setNotes: createAction('SET_NOTES', (resolve) => {
-    return (notes: Note[]) => resolve({ notes })
+    return (notes: string[]) => resolve({ notes })
   }),
   uploadAllNotes: createAction('UPLOAD_ALL_NOTES'),
   getThreadSuccess: createAction('GET_APP_THREAD_SUCCESS', (resolve) => {
@@ -27,15 +27,10 @@ const actions = {
 
 export type MainActions = ActionType<typeof actions>
 
-export interface Note {
-  note: string
-  timestamp: number
-}
-
 export interface MainState {
   appThread?: pb.IThread
   nodeState: NodeState
-  storedNotes: Note[]
+  storedNotes: string[]
   notes: string[]
   email?: string
 }

@@ -1,6 +1,6 @@
 import { takeLatest } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import MainActions, { MainSelectors, Note } from '../Redux/MainRedux'
+import MainActions, { MainSelectors } from '../Redux/MainRedux'
 import { put, all, call, take, select } from 'redux-saga/effects'
 import * as RNFS from 'react-native-fs'
 import { API, pb } from '@textile/react-native-sdk'
@@ -9,25 +9,31 @@ import Config from 'react-native-config'
 
 const { PROMISE, API_URL } = Config
 
+// const JSON_SCHEMA = {
+//   name: 'notes',
+//   pin: true,
+//   mill: '/json',
+//   plaintext: true,
+//   json_schema: {
+//     title: 'TextileNotes',
+//     type: 'object',
+//     properties: {
+//       timestamp: {
+//         type: 'number',
+//         description: 'Epoch when the note was created.'
+//       },
+//       note: {
+//         type: 'string',
+//         description: 'The content of the note.'
+//       }
+//     }
+//   }
+// }
 const JSON_SCHEMA = {
   name: 'notes',
   pin: true,
-  mill: '/json',
-  plaintext: true,
-  json_schema: {
-    title: 'TextileNotes',
-    type: 'object',
-    properties: {
-      timestamp: {
-        type: 'number',
-        description: 'Epoch when the note was created.'
-      },
-      note: {
-        type: 'string',
-        description: 'The content of the note.'
-      }
-    }
-  }
+  mill: '/blob',
+  plaintext: true
 }
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
@@ -41,8 +47,8 @@ export function* mainSagaInit() {
 }
 
 function * getOrCreateThread() {
-  const APP_THREAD_NAME = 'private_notes'
-  const APP_THREAD_KEY = 'textile_notes-primary'
+  const APP_THREAD_NAME = 'private_notes_blob'
+  const APP_THREAD_KEY = 'textile_notes-primary-blob'
   try {
     const threads: pb.ThreadList = yield call(API.threads.list)
     const target = threads.items.find((thread: pb.IThread) => thread.key === APP_THREAD_KEY)
@@ -67,7 +73,7 @@ function * getOrCreateThread() {
 
 export function * refreshNotes() {
   const appThread = yield select(MainSelectors.getAppThread)
-  const allNotes: Note[] = []
+  const allNotes: string[] = []
   try {
     const files = yield call(API.files.list, '', -1, appThread.id)
     const hashes = files.items.map((file) => file.files.map((ffs) => ffs.file.hash))
@@ -75,8 +81,7 @@ export function * refreshNotes() {
       try {
         const data = yield call(API.files.data, hash)
         const buff = Buffer.from(data.split(',')[1], 'base64')
-        const json: Note = JSON.parse(buff.toString())
-        allNotes.push(json)
+        allNotes.push(buff.toString())
       } catch (err) {
         // console.log('file error', err.message)
       }
@@ -90,15 +95,10 @@ export function * refreshNotes() {
 
 export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
   const appThread = yield select(MainSelectors.getAppThread)
-  const file = {
-    timestamp: (new Date()).getTime(),
-    note: action.payload.note.trim()
-  }
-  const path = RNFS.DocumentDirectoryPath + '/' + fakeUUID() + '.json'
-  yield call(RNFS.writeFile, path, JSON.stringify(file), 'utf8')
+  const path = RNFS.DocumentDirectoryPath + '/' + fakeUUID() + '.txt'
+  yield call(RNFS.writeFile, path, action.payload.note.trim(), 'utf8')
   const result = yield call(API.files.prepare, path, appThread.id)
   yield call(RNFS.unlink, path)
-
   const dir = result.dir
   if (!dir) {
     return
