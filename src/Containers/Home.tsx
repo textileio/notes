@@ -53,7 +53,7 @@ class Home extends Component<Props> {
     RNShake.addEventListener('ShakeEvent', () => {
       if (this.state.note !== '') {
         Alert.alert(
-          'Create Ephemeral IPFS Link',
+          'Create disappearing IPFS note',
           'Cannot be undone.',
           [
             {
