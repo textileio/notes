@@ -694,17 +694,16 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.0.0.tgz#9342b7eb52ed3c903e122841407d4984b7338339"
 
-"@textile/go-mobile@1.0.0-rc52":
-  version "1.0.0-rc52"
-  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc52.tgz#0da2d6eac9a27f72b8f72b2b38f28393270639d0"
+"@textile/go-mobile@1.0.0-rc55":
+  version "1.0.0-rc55"
+  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-1.0.0-rc55.tgz#f3d420c0dd758419f0ca4580f19ddcf8a7633844"
   dependencies:
     protobufjs "^6.8.8"
 
-"@textile/react-native-sdk@1.1.0-rc39":
-  version "1.1.0-rc39"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc39.tgz#7009529b6a0c73fccc22c91e2940a8f79e7d3613"
+"@textile/react-native-sdk@../react-native-sdk":
+  version "1.1.0-rc42"
   dependencies:
-    "@textile/go-mobile" "1.0.0-rc52"
+    "@textile/go-mobile" "1.0.0-rc55"
     buffer "^5.2.1"
 
 "@types/cheerio@*":
@@ -743,8 +742,8 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.9.5.tgz#011eece9d3f839a806b63973e228f85967b79ed3"
 
 "@types/node@^10.1.0":
-  version "10.12.27"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.27.tgz#eb3843f15d0ba0986cc7e4d734d2ee8b50709ef8"
+  version "10.14.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.1.tgz#8701cd760acc20beba5ffe0b7a1b879f39cb8c41"
 
 "@types/prop-types@*":
   version "15.5.9"
