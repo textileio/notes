@@ -1,7 +1,6 @@
 import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import MainActions, { MainSelectors } from '../Redux/MainRedux'
-import * as RNFS from 'react-native-fs'
 import { API, pb } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
@@ -100,25 +99,7 @@ export function * refreshNotes() {
     for (const hash of [].concat.apply([], hashes)) {
       try {
         const data = yield call(API.files.data, hash)
-        console.log(data)
-        console.log('axh', data.split(',')[1])
-        // console.log(Buffer.from(data.split(',')[1]).toString('utf8'))
-        console.log('boom?', Buffer.from(data.split(',')[1], 'base64').toString(),
-          Buffer.from(
-            Buffer.from(data.split(',')[1], 'base64').toString(),
-            'utf8'
-          ).toString('ascii')
-        )
-        console.log((new Buffer.from(data.split(',')[1], 'base64')).toString('ascii'))
-        console.log(Buffer.from(data.split(',')[1], 'base64').toString('utf8'))
-        console.log(Buffer.from(data.split(',')[1]).toString('utf16le'))
-        // console.log(Buffer.from(data.split(',')[1], 'utf8').toString('utf8'))
-        // console.log(Buffer.from(data.split(',')[1], 'binary').toString('utf8'))
-        // console.log(Buffer.from(data.split(',')[1], 'ascii').toString('utf8'))
-        const buff = Buffer.from(data.split(',')[1])
-        const newnew =  buff.toString('utf8')
-        console.log('buf2',newnew)
-        allNotes.push(newnew)
+        allNotes.push(Buffer.from(data.split(',')[1], 'base64').toString())
       } catch (err) {
         // console.log('file error', err.message)
       }
@@ -132,47 +113,9 @@ export function * refreshNotes() {
 
 export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
   const appThread = yield select(MainSelectors.getAppThread)
-  // const path = RNFS.DocumentDirectoryPath + '/' + fakeUUID() + '.txt'
-  // yield call(RNFS.writeFile, path, action.payload.note.trim(), 'utf8')
-  // const result = yield call(API.files.prepare, path, appThread.id)
-  // yield call(RNFS.unlink, path)
-  // const dir = result.dir
-  // if (!dir) {
-  //   return
-  // }
-  // const file = Buffer.from(action.payload.note.trim())
-  const buf = Buffer.from(action.payload.note.trim(), 'utf16le')
-  // const input = buf.toString('base64')
-  // const input = ( new Buffer(action.payload.note.trim()) ).toString('base64')
-  // const input = Buffer.from(action.payload.note.trim()).toString() //.toString('base64')
-  // const input = action.payload.note.trim().
-
-
-  // const input = 'vanilla'
-  // const result = yield call(API.files.prepareFiles, input, appThread.id)
-  // yield call(API.files.add, result.dir, appThread.id)
-
-
-  // const input2 = new Buffer('buffer toString').toString()
-  // const result2 = yield call(API.files.prepareFiles, input2, appThread.id)
-  // yield call(API.files.add, result2.dir, appThread.id)
-
-
-  // const input3 = new Buffer('buffer toLocaleString').toLocaleString()
-  // const result3 = yield call(API.files.prepareFiles, input3, appThread.id)
-  // yield call(API.files.add, result3.dir, appThread.id)
-
-  // const input4 = new Buffer('stackabuse.com').toString('base64')
-  const input4 = 'stackabuse.com'
-  console.log('input4', input4)
-  const result4 = yield call(API.files.prepareFiles, input4, appThread.id)
-  console.log(result4)
-  yield call(API.files.add, result4.dir, appThread.id)
-
-  // const input5 = new Buffer('buffer binary').toString('binary')
-  // const result5 = yield call(API.files.prepareFiles, input5, appThread.id)
-  // yield call(API.files.add, result5.dir, appThread.id)
-
+  const input = Buffer.from(action.payload.note.trim()).toString('base64')
+  const result = yield call(API.files.prepareFiles, input, appThread.id)
+  yield call(API.files.add, result.dir, appThread.id)
   yield call(refreshNotes)
 }
 export function * nodeStarted(action: ActionType<typeof MainActions.nodeStarted>) {
@@ -244,15 +187,8 @@ function fakeUUID () {
 export function * createPublicNote(action: ActionType<typeof MainActions.submitNote>) {
   try {
     const publicThread = yield select(MainSelectors.getPublicThread)
-    // const path = RNFS.DocumentDirectoryPath + '/' + fakeUUID() + '.txt'
-    // yield call(RNFS.writeFile, path, action.payload.note.trim(), 'utf8')
-    // const result = yield call(API.files.prepare, path, publicThread.id)
-    // yield call(RNFS.unlink, path)
-    // const dir = result.dir
-    // if (!dir) {
-    //   return
-    // }
-    const result = yield call(API.files.prepareFiles, action.payload.note.trim(), publicThread.id)
+    const input = Buffer.from(action.payload.note.trim()).toString('base64')
+    const result = yield call(API.files.prepareFiles, input, publicThread.id)
 
     const block = yield call(API.files.add, result.dir, publicThread.id)
 
