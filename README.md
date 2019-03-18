@@ -12,6 +12,10 @@
 
 [Grab the Android release](https://play.google.com/store/apps/details?id=io.textile.notes)
 
+## Available as iOS Beta
+
+[Grab the iOS release](https://testflight.apple.com/join/hN8nRWlP)
+
 ## More info
 
 [Support](SUPPORT.md)
