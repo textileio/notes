@@ -246,7 +246,7 @@ class Home extends Component<Props> {
         style={styles.publicLink}
         onPress={this.openPublicLink}
       >
-        <Text style={{color: '#2935ff', fontSize: 30}}>🌐</Text>
+        <Text style={{color: '#2935ff', fontSize: 30, fontWeight: '900'}}>✓</Text>
       </TouchableOpacity>
     )
   }
@@ -255,7 +255,7 @@ class Home extends Component<Props> {
       <View
         style={styles.publicLink}
       >
-        <Image source={require('../static/loading.gif')} style={{width: 30, height: 30}}/>
+        <Image source={require('../static/loading.gif')} style={{width: 75, height: 75}}/>
       </View>
     )
   }
