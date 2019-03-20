@@ -92,7 +92,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -102,8 +102,12 @@ android {
         applicationId "io.textile.notes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "1.4"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+        resValue "string", "build_config_package", "io.textile.notes"
     }
     signingConfigs {
         release {
@@ -120,11 +124,13 @@ android {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86", "arm64-v8a"
+            include "armeabi-v7a", "x86"
         }
     }
     buildTypes {
         release {
+            minifyEnabled true
+            shrinkResources true
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release

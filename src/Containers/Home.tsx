@@ -97,14 +97,19 @@ class Home extends Component<Props> {
   keyExtractor = (item: string, index: number) => String(index)
   renderNote = ({item}) => {
     // todo: indicate which are not sent yet
-    return (
-      <TouchableOpacity
-        style={styles.note}
-        onPress={this.setNoteText(item)}
-      >
-        <Text style={styles.noteText}>{item}</Text>
-      </TouchableOpacity>
-    )
+    try {
+
+      return (
+        <TouchableOpacity
+          style={styles.note}
+          onPress={this.setNoteText(item)}
+        >
+          <Text style={styles.noteText}>{item}</Text>
+        </TouchableOpacity>
+      )
+    } catch (error) {
+      return (<View/>)
+    }
   }
 
   setNoteText = (text: string) => {
@@ -177,9 +182,11 @@ class Home extends Component<Props> {
   }
 
   onSwipeUp = () => {
-    if (this.state.note !== '') {
-      this.props.submitNote(this.state.note)
-      this.setState({note: ''})
+    return () => {
+      if (this.state.note !== '') {
+        this.props.submitNote(this.state.note)
+        this.setState({note: ''})
+      }
     }
   }
 
@@ -187,7 +194,7 @@ class Home extends Component<Props> {
     const textInputHeight = Dimensions.get('window').height * 0.35
     const swipeConfig = {
       velocityThreshold: 0.1,
-      directionalOffsetThreshold: 50
+      directionalOffsetThreshold: 10
     }
     return (
       <View
@@ -215,7 +222,7 @@ class Home extends Component<Props> {
             <SwipeScroll
               style={styles.scrollView}
               onTouchEnd={this.focusNote}
-              onSwipeUp={this.onSwipeUp}
+              onSwipeUp={this.onSwipeUp()}
               config={swipeConfig}
             >
               <TextInput

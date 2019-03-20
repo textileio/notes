@@ -41,10 +41,11 @@ const styles = StyleSheet.create<Style>({
   },
   scrollView: {
     flex: 1,
-    paddingTop: 80,
-    paddingBottom: 40,
+    paddingTop: 20,
+    paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    zIndex: 99
   },
   textArea: {
     // flex: 1,
