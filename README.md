@@ -33,3 +33,7 @@ Textile Note stores notes on device using a local IPFS node, later we'll use tha
 ## Built with Textile Boilerplate
 
 If you want to build your own app, feel free to pick this code apart or just grab the [advanced boilerplate](https://github.com/textileio/advanced-react-native-boilerplate) we used. 
+
+## Blog Post
+
+We released the app in a [blog post](https://medium.com/textileio/textile-notes-a-minimalist-tool-for-your-creative-ideas-68b9357d5cd0) and [tweet](https://twitter.com/Textile01/status/1108074549512306688), join the discussions over there. 
