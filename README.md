@@ -25,3 +25,11 @@
 [More about Textile](https://textile.io)
 
 [Try Textile Photos](https://textile.photos)
+
+## Running Textile Inside
+
+Textile Note stores notes on device using a local IPFS node, later we'll use that node to help you sync your notes across devices. The app uses the [Textile React Native SDK](https://github.com/textileio/react-native-sdk) to manage note encryption and pinning locally. 
+
+## Built with Textile Boilerplate
+
+If you want to build your own app, feel free to pick this code apart or just grab the [advanced boilerplate](https://github.com/textileio/advanced-react-native-boilerplate) we used. 
