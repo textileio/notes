@@ -12,6 +12,14 @@
 
 [Grab the Android release](https://play.google.com/store/apps/details?id=io.textile.notes)
 
+## Available for iOS
+
+[Grab the iOS release](https://itunes.apple.com/us/app/textile-notes/id1455735844?ls=1&mt=8)
+
+## Blog Post
+
+We released the app in a [blog post](https://medium.com/textileio/textile-notes-a-minimalist-tool-for-your-creative-ideas-68b9357d5cd0) and [tweet](https://twitter.com/Textile01/status/1108074549512306688), join the discussions over there. 
+
 ## More info
 
 [Support](SUPPORT.md)
@@ -21,3 +29,11 @@
 [More about Textile](https://textile.io)
 
 [Try Textile Photos](https://textile.photos)
+
+## Running Textile Inside
+
+Textile Note stores notes on device using a local IPFS node, later we'll use that node to help you sync your notes across devices. The app uses the [Textile React Native SDK](https://github.com/textileio/react-native-sdk) to manage note encryption and pinning locally. 
+
+## Built with Textile Boilerplate
+
+If you want to build your own app, feel free to pick this code apart or just grab the [advanced boilerplate](https://github.com/textileio/advanced-react-native-boilerplate) we used. 
