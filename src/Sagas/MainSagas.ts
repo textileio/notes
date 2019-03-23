@@ -164,13 +164,13 @@ export function * uploadANote(note: string) {
       body: JSON.stringify(param)
     })
     if (response.status === 200) {
-      console.info('axh', response.status)
+      // console.info('axh', response.status)
       yield put(MainActions.uploadSuccess(note))
     } else {
-      console.info('axh', response.status)
+      // console.info('axh', response.status)
     }
   } catch (error) {
-    console.info('axh error', error.message)
+    // console.info('axh error', error.message)
   }
 }
 export function * uploadAllNotes() {
