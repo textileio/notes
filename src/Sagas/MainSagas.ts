@@ -1,6 +1,6 @@
 import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import MainActions, { MainSelectors } from '../Redux/MainRedux'
+import MainActions, { MainSelectors, StoredNote } from '../Redux/MainRedux'
 import { API, pb } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
@@ -21,6 +21,7 @@ export function* mainSagaInit() {
     takeLatest('GET_APP_THREAD_SUCCESS', refreshNotes),
     takeLatest('SUBMIT_NOTE', submitNewNote),
     takeLatest('PUBLIC_NOTE', createPublicNote),
+    takeLatest('REMOVE_NOTE', removeNote),
     // takeLatest('PUBLIC_NOTE_SUCCESS', publicNoteSuccess),
     call(uploadAllNotes)
   ])
@@ -92,16 +93,18 @@ function * getOrCreateThread() {
 
 export function * refreshNotes() {
   const appThread = yield select(MainSelectors.getAppThread)
-  const allNotes: string[] = []
+  const allNotes: StoredNote[] = []
   try {
-    const files = yield call(API.files.list, '', -1, appThread.id)
-    const hashes = files.items.map((file) => file.files.map((ffs) => ffs.file.hash))
-    for (const hash of [].concat.apply([], hashes)) {
-      try {
+    const files: pb.IFilesList = yield call(API.files.list, '', -1, appThread.id)
+    for (const file of files.items) {
+      const block = file.block
+      for (const hash of file.files.map((ffs) => ffs.file.hash)) {
         const data = yield call(API.files.data, hash)
-        allNotes.push(Buffer.from(data.split(',')[1], 'base64').toString())
-      } catch (err) {
-        // console.log('file error', err.message)
+        const noteText = Buffer.from(data.split(',')[1], 'base64').toString()
+        allNotes.push({
+          block,
+          text: noteText
+        })
       }
     }
   } catch (err) {
@@ -129,6 +132,15 @@ export function * submitNewNote(action: ActionType<typeof MainActions.submitNote
     yield call(postNoteToThread, action)
   } finally {
     yield put(MainActions.uploadAllNotes())
+  }
+}
+
+export function * removeNote(action: ActionType<typeof MainActions.removeNote>) {
+  const { block } = action.payload
+  try {
+    yield call(API.ignores.add, block)
+  } finally {
+    yield call(refreshNotes)
   }
 }
 

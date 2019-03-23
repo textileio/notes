@@ -102,8 +102,8 @@ android {
         applicationId "io.textile.notes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "1.4"
+        versionCode 6
+        versionName "1.4.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

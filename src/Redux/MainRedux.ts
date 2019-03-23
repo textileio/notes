@@ -23,7 +23,10 @@ const actions = {
     return (note: string) => resolve({ note })
   }),
   setNotes: createAction('SET_NOTES', (resolve) => {
-    return (notes: string[]) => resolve({ notes })
+    return (notes: StoredNote[]) => resolve({ notes })
+  }),
+  removeNote: createAction('REMOVE_NOTE', (resolve) => {
+    return (block: string) => resolve({ block })
   }),
   uploadAllNotes: createAction('UPLOAD_ALL_NOTES'),
   getThreadSuccess: createAction('GET_APP_THREAD_SUCCESS', (resolve) => {
@@ -39,12 +42,16 @@ const actions = {
 
 export type MainActions = ActionType<typeof actions>
 
+export interface StoredNote {
+  block: string
+  text: string
+}
 export interface MainState {
   onboarding: boolean
   appThread?: pb.IThread
   publicThread?: pb.IThread
   nodeState: NodeState
-  storedNotes: string[]
+  threadNotes: ReadonlyArray<StoredNote>
   notes: string[]
   email?: string
   publicNoteUrl?: string
@@ -55,7 +62,7 @@ const initialState: MainState = {
   onboarding: true,
   nodeState: NodeState.nonexistent,
   notes: [],
-  storedNotes: []
+  threadNotes: []
 }
 
 export function reducer(state = initialState, action: MainActions) {
@@ -67,7 +74,7 @@ export function reducer(state = initialState, action: MainActions) {
       return { ...state, email: action.payload.email }
     }
     case getType(actions.setNotes): {
-      return { ...state, storedNotes: action.payload.notes, publishingNote: false }
+      return { ...state, threadNotes: action.payload.notes, publishingNote: false }
     }
     case getType(actions.publicNoteSuccess): {
       return { ...state, publishingNote: false }

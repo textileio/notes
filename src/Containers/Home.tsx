@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { View, Text, TextInput, TouchableOpacity, FlatList, Keyboard, Dimensions, Alert, Linking, Image } from 'react-native'
+import { KeyboardAvoidingView, View, Text, TextInput, TouchableOpacity, FlatList, Keyboard, Dimensions, Alert, Linking, Image, Platform } from 'react-native'
 import { RootAction, RootState } from '../Redux/Types'
 import Drawer from 'react-native-drawer'
 import RNShake from 'react-native-shake'
 import SwipeScroll from './Swipe'
 import styles from './Styles'
 import { NodeState } from '@textile/react-native-sdk'
-import MainActions from '../Redux/MainRedux'
+import MainActions, { StoredNote } from '../Redux/MainRedux'
 
 interface ScreenState {
   note: string
@@ -94,22 +94,28 @@ class Home extends Component<Props> {
     }
     return this.notesHistory()
   }
-  keyExtractor = (item: string, index: number) => String(index)
-  renderNote = ({item}) => {
+  keyExtractor = (item: StoredNote, index: number) => String(index)
+  renderNote = (row) => {
+    const { item, index } = row
     // todo: indicate which are not sent yet
     try {
 
       return (
         <TouchableOpacity
           style={styles.note}
-          onPress={this.setNoteText(item)}
+          onPress={() => { this.setNoteText(item.text) }}
+          onLongPress={() => { this.removeNote(index, item) }}
         >
-          <Text style={styles.noteText}>{item}</Text>
+          <Text style={styles.noteText}>{item.text}</Text>
         </TouchableOpacity>
       )
     } catch (error) {
       return (<View/>)
     }
+  }
+
+  removeNote = (index: number, note: StoredNote) => {
+    this.props.removeNote(note.block)
   }
 
   setNoteText = (text: string) => {
@@ -126,7 +132,7 @@ class Home extends Component<Props> {
     return (
       <View style={styles.notesBox}>
         <FlatList
-          data={this.props.storedNotes}
+          data={this.props.threadNotes}
           keyExtractor={this.keyExtractor}
           /* tslint:disable-next-line */
           renderItem={this.renderNote.bind(this)}
@@ -197,7 +203,7 @@ class Home extends Component<Props> {
       directionalOffsetThreshold: 10
     }
     return (
-      <View
+      <KeyboardAvoidingView
         style={styles.container}
       >
         <Drawer
@@ -220,7 +226,7 @@ class Home extends Component<Props> {
             style={{flex: 1,  backgroundColor: 'white'}}
           >
             <SwipeScroll
-              style={styles.scrollView}
+              style={{... styles.scrollView, paddingTop: Platform.OS === 'android' ? 20 : 80}}
               onTouchEnd={this.focusNote}
               onSwipeUp={this.onSwipeUp()}
               config={swipeConfig}
@@ -238,12 +244,12 @@ class Home extends Component<Props> {
                 returnKeyType='next'
               />
             </SwipeScroll>
-            <View style={{flex: 1,  backgroundColor: 'white'}}/>
+            <View style={{flex: 0.25,  backgroundColor: 'white'}}/>
           </View>
         </Drawer>
         {!this.props.publishingNote && this.props.publicNoteUrl && this.renderNoteLink()}
         {this.props.publishingNote && this.renderNoteLoading()}
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 
@@ -277,24 +283,28 @@ class Home extends Component<Props> {
 interface StateProps {
   nodeState: NodeState
   previewText: string
-  storedNotes: string[]
+  threadNotes: ReadonlyArray<StoredNote>
   email?: string
   publicNoteUrl?: string
   publishingNote?: boolean
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  const onboardingText = Platform.OS === 'android' ?
+    '\n\n\nswipe ^ up ^ saves ^ to ^ inbox\n\n>>>> drag out shows old notes' :
+    '\n\n\nswipe ^ up ^ saves ^ to ^ inbox\n\n~~shake~~stores~~on~~ipfs~~\n\n>>>> drag out shows old notes'
   return {
-    previewText: state.main.onboarding ? '\n\n\nswipe ^ up ^ saves ^ to ^ inbox\n\n~~shake~~stores~~on~~ipfs~~\n\n>>>> drag out shows old notes' : '',
+    previewText: state.main.onboarding ? onboardingText : '',
     nodeState: state.main.nodeState,
     email: state.main.email,
-    storedNotes: state.main.storedNotes,
+    threadNotes: state.main.threadNotes,
     publicNoteUrl: state.main.publicNoteUrl,
     publishingNote: state.main.publishingNote
   }
 }
 
 interface DispatchProps {
+  removeNote: (block: string) => void
   publicNote: (note: string) => void
   submitNote: (note: string) => void
   setEmail: (email: string) => void
@@ -303,6 +313,7 @@ interface DispatchProps {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
+    removeNote: (block: string) => { dispatch(MainActions.removeNote(block)) },
     publicNote: (note: string) => { dispatch(MainActions.publicNote(note)) },
     submitNote: (note: string) => { dispatch(MainActions.submitNote(note)) },
     setEmail: (email: string) => { dispatch(MainActions.setEmail(email)) },
