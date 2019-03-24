@@ -241,7 +241,8 @@ class Home extends Component<Props> {
                 multiline={true}
                 maxLength={2000}
                 placeholder={this.props.previewText}
-                returnKeyType='next'
+                textAlignVertical={'top'}
+                returnKeyType={'next'}
               />
             </SwipeScroll>
             <View style={{flex: 0.25,  backgroundColor: 'white'}}/>
