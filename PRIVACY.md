@@ -33,3 +33,7 @@ If you are under 13, we don't want your personal information, and you must not p
 ### What if we change this privacy policy or any of our privacy notices?
 
 We may need to change this policy and our notices. The updates will be posted online. If the changes are substantive, we will announce the update through Textile's usual channels for such announcements such as blog posts and forums. Your continued use of the product or service after the effective date of such changes constitutes your acceptance of such changes.
+
+### Unsolicited Emails
+
+Textile will not email you with unsolicited advertisements.
