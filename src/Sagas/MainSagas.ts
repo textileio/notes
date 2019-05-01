@@ -1,7 +1,7 @@
 import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import MainActions, { MainSelectors, StoredNote } from '../Redux/MainRedux'
-import { API, pb } from '@textile/react-native-sdk'
+import Textile, { IAddThreadConfig, Thread, AddThreadConfig, IFilesList } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 
@@ -12,6 +12,13 @@ const JSON_SCHEMA = {
   pin: true,
   mill: '/blob',
   plaintext: false
+}
+
+const PUBLIC_SCHEMA = {
+  name: 'public-notes',
+  pin: true,
+  mill: '/blob',
+  plaintext: true
 }
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
@@ -28,36 +35,52 @@ export function* mainSagaInit() {
 }
 
 function * createPrivateThread(name, key) {
-  const schema = pb.AddThreadConfig.Schema.create()
-  schema.json = JSON.stringify(JSON_SCHEMA)
-  const config = pb.AddThreadConfig.create()
-  config.key = key
-  config.name = name
-  config.type = pb.Thread.Type.PRIVATE
-  config.sharing = pb.Thread.Sharing.NOT_SHARED
-  config.schema = schema
-
-  const newTarget: pb.IThread = yield call(API.threads.add, config)
+  // NOTE: maybe missing toJSON param
+  const schema = {
+    id: '',
+    json: JSON.stringify(JSON_SCHEMA),
+    preset: AddThreadConfig.Schema.Preset.NONE
+  }
+  const config: IAddThreadConfig = {
+    key,
+    name,
+    type: Thread.Type.PRIVATE,
+    sharing: Thread.Sharing.NOT_SHARED,
+    schema,
+    force: false,
+    members: []
+  }
+  const newTarget = yield call(Textile.threads.add, config)
+  // pb.AddThreadConfig.Schema.create()
+  // schema.json = JSON.stringify(JSON_SCHEMA)
+  // const config = pb.AddThreadConfig.create()
+  // config.key = key
+  // config.name = name
+  // config.type = pb.Thread.Type.PRIVATE
+  // config.sharing = pb.Thread.Sharing.NOT_SHARED
+  // config.schema = schema
+  // const newTarget: pb.IThread = yield call(API.threads.add, config)
   yield put(MainActions.getThreadSuccess(newTarget))
 }
 
 function * createPublicThread(name, key) {
-  const schema2 = pb.AddThreadConfig.Schema.create()
-  schema2.json = JSON.stringify({
-    name: 'public-notes',
-    pin: true,
-    mill: '/blob',
-    plaintext: true
-  })
-  const config2 = pb.AddThreadConfig.create()
-  config2.key = key
-  config2.name = name
-  config2.type = pb.Thread.Type.OPEN
-  config2.sharing = pb.Thread.Sharing.NOT_SHARED
-  config2.schema = schema2
+  const schema = {
+    id: '',
+    json: JSON.stringify(PUBLIC_SCHEMA),
+    preset: AddThreadConfig.Schema.Preset.NONE
+  }
+  const config: IAddThreadConfig = {
+    key,
+    name,
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.NOT_SHARED,
+    schema,
+    force: false,
+    members: []
+  }
 
-  const newTarget2: pb.IThread = yield call(API.threads.add, config2)
-  yield put(MainActions.getPublicThreadSuccess(newTarget2))
+  const newTarget = yield call(Textile.threads.add, config)
+  yield put(MainActions.getPublicThreadSuccess(newTarget))
 }
 
 function * getOrCreateThread() {
@@ -67,15 +90,15 @@ function * getOrCreateThread() {
   const PUBLIC_APP_THREAD_NAME = 'public_notes_blob'
   const PUBLIC_APP_THREAD_KEY = 'textile_public_notes-primary-blob'
   try {
-    const threads: pb.ThreadList = yield call(API.threads.list)
-    const target = threads.items.find((thread: pb.IThread) => thread.key === APP_THREAD_KEY)
+    const threads = yield call(Textile.threads.list)
+    const target = threads.items.find((thread: Thread) => thread.key === APP_THREAD_KEY)
     if (!target) {
       yield call(createPrivateThread, APP_THREAD_NAME, APP_THREAD_KEY)
     } else {
       yield put(MainActions.getThreadSuccess(target))
     }
 
-    const pubTarget = threads.items.find((thread: pb.IThread) => thread.key === PUBLIC_APP_THREAD_KEY)
+    const pubTarget = threads.items.find((thread: Thread) => thread.key === PUBLIC_APP_THREAD_KEY)
     if (!pubTarget) {
       yield call(createPublicThread, PUBLIC_APP_THREAD_NAME, PUBLIC_APP_THREAD_KEY)
     } else {
@@ -95,11 +118,11 @@ export function * refreshNotes() {
   const appThread = yield select(MainSelectors.getAppThread)
   const allNotes: StoredNote[] = []
   try {
-    const files: pb.IFilesList = yield call(API.files.list, '', -1, appThread.id)
+    const files: IFilesList = yield call(Textile.files.list, '', -1, appThread.id)
     for (const file of files.items) {
       const block = file.block
       for (const hash of file.files.map((ffs) => ffs.file.hash)) {
-        const data = yield call(API.files.data, hash)
+        const data = yield call(Textile.files.data, hash)
         const noteText = Buffer.from(data.split(',')[1], 'base64').toString()
         allNotes.push({
           block,
@@ -117,8 +140,8 @@ export function * refreshNotes() {
 export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
   const appThread = yield select(MainSelectors.getAppThread)
   const input = Buffer.from(action.payload.note.trim()).toString('base64')
-  const result = yield call(API.files.prepareFiles, input, appThread.id)
-  yield call(API.files.add, result.dir, appThread.id)
+  const result = yield call(Textile.files.prepare, input, appThread.id)
+  yield call(Textile.files.add, result.dir, appThread.id)
   yield call(refreshNotes)
 }
 export function * nodeStarted(action: ActionType<typeof MainActions.nodeStarted>) {
@@ -138,7 +161,7 @@ export function * submitNewNote(action: ActionType<typeof MainActions.submitNote
 export function * removeNote(action: ActionType<typeof MainActions.removeNote>) {
   const { block } = action.payload
   try {
-    yield call(API.ignores.add, block)
+    yield call(Textile.ignores.add, block)
   } finally {
     yield call(refreshNotes)
   }
@@ -200,11 +223,11 @@ export function * createPublicNote(action: ActionType<typeof MainActions.submitN
   try {
     const publicThread = yield select(MainSelectors.getPublicThread)
     const input = Buffer.from(action.payload.note.trim()).toString('base64')
-    const result = yield call(API.files.prepareFiles, input, publicThread.id)
+    const result = yield call(Textile.files.prepare, input, publicThread.id)
 
-    const block = yield call(API.files.add, result.dir, publicThread.id)
+    const block = yield call(Textile.files.add, result.dir, publicThread.id)
 
-    const files = yield call(API.files.list, '', -1, publicThread.id)
+    const files = yield call(Textile.files.list, '', -1, publicThread.id)
     const latest = files.items.length > 0 ? files.items[0] : undefined
     if (latest) {
       const file = latest.files[0].file

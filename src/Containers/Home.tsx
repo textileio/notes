@@ -7,7 +7,6 @@ import Drawer from 'react-native-drawer'
 import RNShake from 'react-native-shake'
 import SwipeScroll from './Swipe'
 import styles from './Styles'
-import { NodeState } from '@textile/react-native-sdk'
 import MainActions, { StoredNote } from '../Redux/MainRedux'
 
 interface ScreenState {
@@ -231,6 +230,8 @@ class Home extends Component<Props> {
               onSwipeUp={this.onSwipeUp()}
               config={swipeConfig}
             >
+              {/*
+              // @ts-ignore */}
               <TextInput
                 ref={(ref) => this._noteInput = ref}
                 style={[styles.textArea, {maxHeight: textInputHeight}]}
@@ -241,8 +242,8 @@ class Home extends Component<Props> {
                 multiline={true}
                 maxLength={2000}
                 placeholder={this.props.previewText}
-                textAlignVertical={'top'}
                 returnKeyType={'next'}
+                textAlignVertical={'top'}
               />
             </SwipeScroll>
             <View style={{flex: 0.25,  backgroundColor: 'white'}}/>
@@ -282,7 +283,6 @@ class Home extends Component<Props> {
 }
 
 interface StateProps {
-  nodeState: NodeState
   previewText: string
   threadNotes: ReadonlyArray<StoredNote>
   email?: string
@@ -296,7 +296,6 @@ const mapStateToProps = (state: RootState): StateProps => {
     '\n\n\nswipe ^ up ^ saves ^ to ^ inbox\n\n~~shake~~stores~~on~~ipfs~~\n\n>>>> drag out shows old notes'
   return {
     previewText: state.main.onboarding ? onboardingText : '',
-    nodeState: state.main.nodeState,
     email: state.main.email,
     threadNotes: state.main.threadNotes,
     publicNoteUrl: state.main.publicNoteUrl,

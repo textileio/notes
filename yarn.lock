@@ -694,17 +694,19 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.0.0.tgz#9342b7eb52ed3c903e122841407d4984b7338339"
 
-"@textile/go-mobile@0.1.10-rc3":
-  version "0.1.10-rc3"
-  resolved "https://registry.yarnpkg.com/@textile/go-mobile/-/go-mobile-0.1.10-rc3.tgz#1e425b4cf6743601df883292a8da80acd4e06326"
+"@textile/js-types@0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.11.tgz#650247c092cec006634fa5bcb3d199d15e18050d"
+  integrity sha512-mwROfSeR78R5t2M9HfcSFxVUEiYF/u/6ar2j7QNdDG3ALY7RhU8uXzVdFSNUG81I6hEpL2K5jAK05HSOJaiYwQ==
   dependencies:
     protobufjs "^6.8.8"
 
-"@textile/react-native-sdk@1.1.0-rc45":
-  version "1.1.0-rc45"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.1.0-rc45.tgz#039022045c5d8abcf7e1760595c25b931437a5cf"
+"@textile/react-native-sdk@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.0.tgz#4a99bd35c77d08e8f1bee5970cedd34b115471bd"
+  integrity sha512-Nkz5y9TT8meBiqH6xegSBXjzf6MHfJf0Vzqg7xbgNxXRD/GzTj5pXpV5AT/PcWOKpifssU7tVTrPLhDcSstMig==
   dependencies:
-    "@textile/go-mobile" "0.1.10-rc3"
+    "@textile/js-types" "0.1.11"
     buffer "^5.2.1"
 
 "@types/cheerio@*":

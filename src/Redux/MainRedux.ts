@@ -1,6 +1,8 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import { NodeState, pb } from '@textile/react-native-sdk'
+import { Thread } from '@textile/react-native-sdk'
 import { RootState } from './Types'
+
+export type NodeState = 'started' | 'stopped'
 
 const actions = {
   nodeStarted: createAction('NODE_STARTED'),
@@ -48,8 +50,8 @@ export interface StoredNote {
 }
 export interface MainState {
   onboarding: boolean
-  appThread?: pb.IThread
-  publicThread?: pb.IThread
+  appThread?: Thread
+  publicThread?: Thread
   nodeState: NodeState
   threadNotes: ReadonlyArray<StoredNote>
   notes: string[]
@@ -58,9 +60,10 @@ export interface MainState {
   publishingNote?: boolean
 }
 
+
 const initialState: MainState = {
   onboarding: true,
-  nodeState: NodeState.nonexistent,
+  nodeState:  'stopped',
   notes: [],
   threadNotes: []
 }

@@ -152,12 +152,12 @@ android {
 }
 
 dependencies {
+    compile project(':@textile_react-native-sdk')
     compile project(':react-native-shake')
     compile project(':react-native-config')
     compile project(':react-native-background-fetch')
     compile project(':react-native-fs')
     compile project(':react-native-background-timer')
-    compile project(':@textile_react-native-sdk')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules

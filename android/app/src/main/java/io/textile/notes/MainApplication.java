@@ -3,12 +3,12 @@ package io.textile.notes;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.textile.rnmobile.RNTextilePackage;
 import com.clipsub.RNShake.RNShakeEventPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.rnfs.RNFSPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
-import io.textile.rnmobile.RNTextilePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -29,12 +29,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNTextilePackage(),
             new RNShakeEventPackage(),
             new ReactNativeConfigPackage(),
             new RNBackgroundFetchPackage(),
             new RNFSPackage(),
-            new BackgroundTimerPackage(),
-            new RNTextilePackage()
+            new BackgroundTimerPackage()
       );
     }
 

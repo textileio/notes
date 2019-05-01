@@ -5,14 +5,12 @@ import RootContainer from './RootContainer'
 import configureStore from '../Redux/configureStore'
 import MainActions from '../Redux/MainRedux'
 
-import Textile, {Events as TextileEvents} from '@textile/react-native-sdk'
+import Textile, { EventSubscription } from '@textile/react-native-sdk'
 
 const { store, persistor } = configureStore()
 
 class App extends Component {
-
-  textile = Textile
-  events = new TextileEvents()
+  subscriptions: EventSubscription[] = []
 
   render () {
     return (
@@ -25,22 +23,25 @@ class App extends Component {
   }
 
   componentDidMount () {
-    this.events.addListener('newNodeState', (payload) => {
-      if (payload.state === 'started') {
-        // Redundant to newNodeState, but just for example purposes
+    // 'started', 'stopped
+    this.subscriptions.push(
+      Textile.events.addNodeStartedListener(() => {
         store.dispatch(MainActions.nodeStarted())
-      }
-      store.dispatch(MainActions.newNodeState(payload.state))
-      console.info('@textile/newNodeState', payload.state)
-    })
-    this.textile.setup({
-      MINIMUM_SLEEP_MINUTES: 10,
-      RUN_BACKGROUND_TASK: () => false
-    })
+        store.dispatch(MainActions.newNodeState('started'))
+      })
+    )
+    this.subscriptions.push(
+      Textile.events.addNodeStoppedListener(() => {
+          store.dispatch(MainActions.newNodeState('stopped'))
+      // Account actions
+      })
+    )
   }
 
   componentWillUnmount () {
-    this.textile.tearDown()
+    for (const subscription of this.subscriptions) {
+      subscription.cancel()
+    }
   }
 }
 
