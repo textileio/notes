@@ -214,7 +214,7 @@ class Home extends Component<Props> {
         this.props.submitNote(note, note.stored.text)
         this.setState({note: {
           stored: {
-            key: this.uuidv4(),
+            key: uuidv4(),
             text: '',
             value: {},
             created: (new Date()).getTime(),

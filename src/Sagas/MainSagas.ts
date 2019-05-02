@@ -24,7 +24,8 @@ export function* mainSagaInit() {
 }
 function * initializeTextile() {
   try {
-    const res = yield call(Textile.initialize, false, false)
+    yield call(Textile.initialize, false, false)
+    // TODO: get rid of the below...
     yield delay(2000)
     yield put(MainActions.nodeStarted())
     yield put(MainActions.newNodeState('started'))
