@@ -8,6 +8,7 @@ import RNShake from 'react-native-shake'
 import SwipeScroll from './Swipe'
 import styles from './Styles'
 import MainActions, { UINote } from '../Redux/MainRedux'
+import { uuidv4 } from '../Sagas/MainSagas'
 
 interface ScreenState {
   inputEmail: ''
@@ -26,20 +27,13 @@ class Home extends Component<Props> {
     inputEmail: '',
     note: {
       stored: {
-        key: this.uuidv4(),
+        key: uuidv4(),
         text: '',
         value: {},
         created: (new Date()).getTime(),
         updated: (new Date()).getTime()
       }
     }
-  }
-
-  uuidv4 () {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
-      return v.toString(16)
-    });
   }
 
   setNote = () => {

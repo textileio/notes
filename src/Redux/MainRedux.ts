@@ -64,6 +64,10 @@ const actions = {
   }),
   setEmail: createAction('SET_EMAIL', (resolve) => {
     return (email: string) => resolve({ email })
+  }),
+  migrationSuccess: createAction('MIGRATION_SUCCESS'),
+  handleNewDeepLink: createAction('NEW_DEEP_LINK', (resolve) => {
+    return (url: string) => resolve({ url })
   })
 }
 
@@ -89,10 +93,11 @@ export interface MainState {
   notes: string[]
   appThreadMeta: ThreadMeta
   publicThreadMeta: ThreadMeta
+  pairSeed?: string
   email?: string
   publicNoteUrl?: string
   publishingNote?: boolean
-  migrations?: string[]
+  migrations?: string
 }
 
 const initialState: MainState = {
@@ -174,8 +179,11 @@ export function reducer(state = initialState, action: MainActions) {
     }
     case getType(actions.getThreadSuccess):
       return { ...state, appThread: action.payload.appThread }
-      case getType(actions.getPublicThreadSuccess):
-        return { ...state, publicThread: action.payload.publicThread }
+    case getType(actions.getPublicThreadSuccess):
+      return { ...state, publicThread: action.payload.publicThread }
+    case getType(actions.migrationSuccess): {
+      return { ...state, migrations: undefined }
+    }
     default:
       return state
   }
@@ -189,6 +197,7 @@ export const MainSelectors = {
   email: (state: RootState) => state.main.email,
   getPublicUrl: (state: RootState) => state.main.publicNoteUrl,
   getAppThreadMeta: (state: RootState) => state.main.appThreadMeta,
-  getPublicThreadMeta: (state: RootState) => state.main.publicThreadMeta
+  getPublicThreadMeta: (state: RootState) => state.main.publicThreadMeta,
+  getMigrations: (state: RootState) => state.main.migrations
 }
 export default actions

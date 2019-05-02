@@ -6,6 +6,7 @@ import configureStore from '../Redux/configureStore'
 import MainActions from '../Redux/MainRedux'
 
 import Textile, { EventSubscription } from '@textile/react-native-sdk'
+import { Linking } from 'react-native'
 
 const { store, persistor } = configureStore()
 
@@ -22,8 +23,12 @@ class App extends Component {
     )
   }
 
+  handleDeepLink = (event: {url: string}) => {
+    store.dispatch(MainActions.handleNewDeepLink(event.url))
+  }
+
   componentDidMount () {
-    // 'started', 'stopped
+
     this.subscriptions.push(
       Textile.events.addNodeStartedListener(() => {
         store.dispatch(MainActions.nodeStarted())
@@ -32,16 +37,17 @@ class App extends Component {
     )
     this.subscriptions.push(
       Textile.events.addNodeStoppedListener(() => {
-          store.dispatch(MainActions.newNodeState('stopped'))
-      // Account actions
+        store.dispatch(MainActions.newNodeState('stopped'))
       })
     )
+    Linking.addEventListener('url', this.handleDeepLink)
   }
 
   componentWillUnmount () {
     for (const subscription of this.subscriptions) {
       subscription.cancel()
     }
+    Linking.removeEventListener('url', this.handleDeepLink)
   }
 }
 

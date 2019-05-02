@@ -1,23 +1,36 @@
-import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
+import { takeLatest, fork, put, all, call, take, select, delay, takeEvery } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import MainActions, { MainSelectors, UINote, NoteSchema } from '../Redux/MainRedux'
+import MainActions, { MainSelectors, UINote, NoteSchema, ThreadNote } from '../Redux/MainRedux'
 import Textile, { IAddThreadConfig, Thread, AddThreadConfig, IFilesList, ThreadList, IThread } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
+import { Alert } from 'react-native'
+import { runPendingMigration } from './ThreadMigrationSaga'
 
 const { PROMISE, API_URL } = Config
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* mainSagaInit() {
-  yield call(Textile.initialize, false, false)
   yield all([
+    fork(initializeTextile),
     takeLatest('NODE_STARTED', nodeStarted),
     takeLatest('GET_APP_THREAD_SUCCESS', refreshNotes),
     takeLatest('SUBMIT_NOTE', submitNewNote),
     takeLatest('PUBLIC_NOTE', createPublicNote),
     takeLatest('REMOVE_NOTE', removeNote),
+    takeLatest('NEW_DEEP_LINK', processNewDeepLink),
     call(uploadAllNotes)
   ])
+}
+function * initializeTextile() {
+  try {
+    const res = yield call(Textile.initialize, false, false)
+    yield delay(2000)
+    yield put(MainActions.nodeStarted())
+    yield put(MainActions.newNodeState('started'))
+  } catch (error){
+    console.info(error)
+  }
 }
 
 function * getOrCreatePrivateThread() {
@@ -108,18 +121,21 @@ export function * refreshNotes() {
   }
 }
 
+export function * addToThread(note: ThreadNote, threadId: string) {
+  const payload = JSON.stringify(note)
+  const input = Buffer.from(payload).toString('base64')
+  // const input = Buffer.from(action.payload.note.trim()).toString('base64')
+  const result = yield call(Textile.files.prepare, input, threadId)
+  yield call(Textile.files.add, result.dir, threadId)
+}
 export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
   const { note } = action.payload
   const { block, stored } = note
   const appThread = yield select(MainSelectors.getAppThread)
   // If we are updating a desktop not, unfortunately we need to drop the robust formatting
   const storedMinusValue = {...stored, value: {}}
-  const payload = JSON.stringify(storedMinusValue)
-  const input = Buffer.from(payload).toString('base64')
-  // const input = Buffer.from(action.payload.note.trim()).toString('base64')
   try {
-    const result = yield call(Textile.files.prepare, input, appThread.id)
-    yield call(Textile.files.add, result.dir, appThread.id)
+    yield call(addToThread, storedMinusValue, appThread.id)
     if (block) {
       yield call(Textile.ignores.add, block)
     }
@@ -129,10 +145,13 @@ export function * postNoteToThread(action: ActionType<typeof MainActions.submitN
     yield call(refreshNotes)
   }
 }
+
 export function * nodeStarted(action: ActionType<typeof MainActions.nodeStarted>) {
   console.info('Running nodeStarted Saga')
   yield call(getOrCreateThreads)
   yield put(MainActions.uploadAllNotes())
+  yield call(runPendingMigration)
+  yield call(refreshNotes)
 }
 
 export function * submitNewNote(action: ActionType<typeof MainActions.submitNote>) {
@@ -232,6 +251,38 @@ export function * createPublicNote(action: ActionType<typeof MainActions.publicN
   }
 }
 
+function showSeedAlert() {
+  return new Promise<void>((resolve, reject) => {
+    Alert.alert(
+      'Pair device',
+      'This will clear all locally stored notes',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: reject
+        },
+        {text: 'OK', onPress: resolve}
+      ],
+      {cancelable: false}
+    )
+  })
+}
+
+function * processNewDeepLink(action: ActionType<typeof MainActions.handleNewDeepLink>) {
+  try {
+    const { url } = action.payload
+    const parts = url.split('#')
+    if (url.indexOf('textile.io') >= 0 && parts.length > 1) {
+      const seed = parts[1]
+      yield call(showSeedAlert)
+      console.log('Success', seed)
+    }
+  } catch (error) {
+    console.info('Invalid or rejected invite')
+  }
+}
+
 export function * forkFetch(url: string) {
   const response = yield call(fetch, url)
   if (response.status === 200) {
@@ -251,4 +302,14 @@ export function * publishPublicNote(url: string) {
 export function * findExistingThread(key: string) {
   const threads: ThreadList = yield call(Textile.threads.list)
   return threads.items.find((thread: IThread) => thread.key === key)
+}
+
+export function uuidv4 () {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    /* tslint:disable-next-line */
+    const r = Math.random() * 16 | 0
+    /* tslint:disable-next-line */
+    const v = c == 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
 }

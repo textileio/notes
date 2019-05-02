@@ -42,7 +42,7 @@ const migrations: MigrationManifest = {
       main: {
         ...state.main,
         threadNotes: [],
-        migrations: 'private_notes_blob',
+        migrations: 'textile_notes-primary-blob',
         appThreadMeta: {
           name: 'private_notes_blob',
           key: 'io.textile.notes_desktop_primary_v1',
