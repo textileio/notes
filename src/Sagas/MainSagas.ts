@@ -1,6 +1,6 @@
 import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import MainActions, { MainSelectors, StoredNote, NoteSchema } from '../Redux/MainRedux'
+import MainActions, { MainSelectors, UINote, NoteSchema } from '../Redux/MainRedux'
 import Textile, { IAddThreadConfig, Thread, AddThreadConfig, IFilesList, ThreadList, IThread } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
@@ -9,6 +9,7 @@ const { PROMISE, API_URL } = Config
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* mainSagaInit() {
+  yield call(Textile.initialize, false, false)
   yield all([
     takeLatest('NODE_STARTED', nodeStarted),
     takeLatest('GET_APP_THREAD_SUCCESS', refreshNotes),
@@ -22,7 +23,6 @@ export function* mainSagaInit() {
 function * getOrCreatePrivateThread() {
   // NOTE: maybe missing toJSON param
   const appMeta = yield select(MainSelectors.getAppThreadMeta)
-
   const targetThread = yield call(findExistingThread, appMeta.key)
   if (targetThread) {
    yield put(MainActions.getThreadSuccess(targetThread))
@@ -47,7 +47,7 @@ function * getOrCreatePrivateThread() {
   yield put(MainActions.getThreadSuccess(newTarget))
 }
 
-function * getOrCreatePuplicThread() {
+function * getOrCreatePublicThread() {
   const publicMeta = yield select(MainSelectors.getPublicThreadMeta)
 
   const targetThread = yield call(findExistingThread, publicMeta.key)
@@ -78,7 +78,7 @@ function * getOrCreatePuplicThread() {
 function * getOrCreateThreads() {
   try {
     yield call(getOrCreatePrivateThread)
-    yield call(getOrCreatePuplicThread)
+    yield call(getOrCreatePublicThread)
   } catch (err) {
 
   }
@@ -86,17 +86,18 @@ function * getOrCreateThreads() {
 
 export function * refreshNotes() {
   const appThread = yield select(MainSelectors.getAppThread)
-  const allNotes: StoredNote[] = []
+  const allNotes: UINote[] = []
   try {
     const files: IFilesList = yield call(Textile.files.list, '', -1, appThread.id)
     for (const file of files.items) {
       const block = file.block
       for (const hash of file.files.map((ffs) => ffs.file.hash)) {
         const data = yield call(Textile.files.data, hash)
-        const noteText = Buffer.from(data.split(',')[1], 'base64').toString()
+        const json = Buffer.from(data.split(',')[1], 'base64').toString()
+        const note = JSON.parse(json)
         allNotes.push({
           block,
-          text: noteText
+          stored: note
         })
       }
     }
@@ -108,13 +109,22 @@ export function * refreshNotes() {
 }
 
 export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
+  const { note } = action.payload
+  const { block, stored } = note
   const appThread = yield select(MainSelectors.getAppThread)
-  const input = Buffer.from(action.payload.note.trim()).toString('base64')
-  const result = yield call(Textile.files.prepare, input, appThread.id)
+  const payload = JSON.stringify(stored)
+  const input = Buffer.from(payload).toString('base64')
+  // const input = Buffer.from(action.payload.note.trim()).toString('base64')
   try {
+    const result = yield call(Textile.files.prepare, input, appThread.id)
     yield call(Textile.files.add, result.dir, appThread.id)
-    yield call(refreshNotes)
+    if (block) {
+      yield call(Textile.ignores.add, block)
+    }
   } catch (error) {
+    console.info(error)
+  } finally {
+    yield call(refreshNotes)
   }
 }
 export function * nodeStarted(action: ActionType<typeof MainActions.nodeStarted>) {
@@ -151,7 +161,7 @@ export function * uploadANote(note: string) {
     promise: PROMISE
   }
   try {
-    const response = yield call (fetch, API_URL, {
+    const response = yield call(fetch, API_URL, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -192,7 +202,7 @@ function fakeUUID () {
   })
 }
 
-export function * createPublicNote(action: ActionType<typeof MainActions.submitNote>) {
+export function * createPublicNote(action: ActionType<typeof MainActions.publicNote>) {
   try {
     const publicThread = yield select(MainSelectors.getPublicThread)
     const input = Buffer.from(action.payload.note.trim()).toString('base64')

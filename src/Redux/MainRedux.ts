@@ -35,7 +35,7 @@ const actions = {
     return (nodeState: NodeState) => resolve({ nodeState })
   }),
   submitNote: createAction('SUBMIT_NOTE', (resolve) => {
-    return (note: string) => resolve({ note })
+    return (note: UINote, text: string) => resolve({ note, text })
   }),
   publicNote: createAction('PUBLIC_NOTE', (resolve) => {
     return (note: string) => resolve({ note })
@@ -50,7 +50,7 @@ const actions = {
     return (note: string) => resolve({ note })
   }),
   setNotes: createAction('SET_NOTES', (resolve) => {
-    return (notes: StoredNote[]) => resolve({ notes })
+    return (notes: UINote[]) => resolve({ notes })
   }),
   removeNote: createAction('REMOVE_NOTE', (resolve) => {
     return (block: string) => resolve({ block })
@@ -69,22 +69,30 @@ const actions = {
 
 export type MainActions = ActionType<typeof actions>
 
-export interface StoredNote {
-  block: string
+export interface UINote {
+  block?: string
+  stored: ThreadNote
+}
+export interface ThreadNote {
+  key: string
   text: string
+  value: any
+  created: number
+  updated: number
 }
 export interface MainState {
   onboarding: boolean
   appThread?: Thread
   publicThread?: Thread
   nodeState: NodeState
-  threadNotes: ReadonlyArray<StoredNote>
+  threadNotes: ReadonlyArray<UINote>
   notes: string[]
   appThreadMeta: ThreadMeta
   publicThreadMeta: ThreadMeta
   email?: string
   publicNoteUrl?: string
   publishingNote?: boolean
+  migrations?: string[]
 }
 
 const initialState: MainState = {
@@ -94,12 +102,33 @@ const initialState: MainState = {
   threadNotes: [],
   appThreadMeta: {
     name: 'private_notes_blob',
-    key: 'textile_notes-primary-blob',
+    key: 'io.textile.notes_desktop_primary_v1',
     schema: {
-      name: 'notes',
-      pin: true,
-      mill: '/blob',
-      plaintext: false
+      name: 'io.textile.notes_primary_v0.0.1',
+      mill: '/json',
+      json_schema: {
+        definitions: {},
+        type: 'object',
+        title: '',
+        required: ['key', 'text', 'value', 'updated', 'created'],
+        properties: {
+          key: {
+            type: 'string'
+          },
+          text: {
+            type: 'string'
+          },
+          value: {
+            type: 'object'
+          },
+          updated: {
+            type: 'integer'
+          },
+          created: {
+            type: 'integer'
+          }
+        }
+      }
     }
   },
   publicThreadMeta: {
@@ -138,7 +167,7 @@ export function reducer(state = initialState, action: MainActions) {
       return { ...state, publicNoteUrl: undefined, publishingNote: false }
     }
     case getType(actions.submitNote): {
-      return { ...state, onboarding: false, notes: [action.payload.note, ...state.notes] }
+      return { ...state, onboarding: false, notes: [action.payload.text, ...state.notes] }
     }
     case getType(actions.uploadSuccess): {
       return { ...state, notes: state.notes.filter((note) => note !== action.payload.note) }

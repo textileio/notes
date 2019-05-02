@@ -7,12 +7,12 @@ import Drawer from 'react-native-drawer'
 import RNShake from 'react-native-shake'
 import SwipeScroll from './Swipe'
 import styles from './Styles'
-import MainActions, { StoredNote } from '../Redux/MainRedux'
+import MainActions, { UINote } from '../Redux/MainRedux'
 
 interface ScreenState {
-  note: string
   inputEmail: ''
   open: boolean
+  note: UINote
 }
 
 type Props = StateProps & DispatchProps
@@ -22,13 +22,31 @@ class Home extends Component<Props> {
   _noteInput: any
   _scrollView: any
   state: ScreenState = {
-    note: '',
     open: true,
-    inputEmail: ''
+    inputEmail: '',
+    note: {
+      stored: {
+        key: this.uuidv4(),
+        text: '',
+        value: {},
+        created: (new Date()).getTime(),
+        updated: (new Date()).getTime()
+      }
+    }
+  }
+
+  uuidv4 () {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+    });
   }
 
   setNote = () => {
-    return (note: string) => {
+    return (text: string) => {
+      const { note } = this.state
+      note.stored.text = text.trim()
+      note.stored.updated = (new Date()).getTime()
       this.setState({note})
     }
   }
@@ -50,7 +68,8 @@ class Home extends Component<Props> {
 
   componentWillMount() {
     RNShake.addEventListener('ShakeEvent', () => {
-      if (this.state.note !== '') {
+      const { note } = this.state
+      if (note.stored.text !== '') {
         Alert.alert(
           'Create disappearing IPFS note',
           'Cannot be undone.',
@@ -60,7 +79,7 @@ class Home extends Component<Props> {
               style: 'cancel'
             },
             {text: 'Confirm', onPress: () => {
-              this.props.publicNote(this.state.note)
+              this.props.publicNote(note.stored.text)
             }}
           ],
           {cancelable: true}
@@ -93,18 +112,19 @@ class Home extends Component<Props> {
     }
     return this.notesHistory()
   }
-  keyExtractor = (item: StoredNote, index: number) => String(index)
+  keyExtractor = (item: UINote, index: number) => String(index)
   renderNote = (row) => {
-    const { item, index } = row
+    const item: UINote = row.item
+    const { index } = row
     // todo: indicate which are not sent yet
     try {
       return (
         <TouchableOpacity
           style={styles.note}
-          onPress={this.setNoteText(item.text)}
+          onPress={this.setNoteText(item)}
           onLongPress={this.removeNote(index, item)}
         >
-          <Text style={styles.noteText}>{item.text}</Text>
+          <Text style={styles.noteText}>{item.stored.text}</Text>
         </TouchableOpacity>
       )
     } catch (error) {
@@ -112,18 +132,19 @@ class Home extends Component<Props> {
     }
   }
 
-  removeNote = (index: number, note: StoredNote) => {
+  removeNote = (index: number, note: UINote) => {
     return () => {
+      if (!note.block) {
+        return
+      }
       this.props.removeNote(note.block)
     }
   }
 
-  setNoteText = (text: string) => {
+  setNoteText = (note: UINote) => {
     return () => {
-      console.log(text)
-      const keep = this.state.note === '' ? '' : `${this.state.note}\n`
       this.setState({
-        note: `${keep}${text}`
+        note
       })
       this._drawer.close()
     }
@@ -194,9 +215,18 @@ class Home extends Component<Props> {
 
   onSwipeUp = () => {
     return () => {
-      if (this.state.note !== '') {
-        this.props.submitNote(this.state.note)
-        this.setState({note: ''})
+      const { note } = this.state
+      if (note.stored.text !== '') {
+        this.props.submitNote(note, note.stored.text)
+        this.setState({note: {
+          stored: {
+            key: this.uuidv4(),
+            text: '',
+            value: {},
+            created: (new Date()).getTime(),
+            updated: (new Date()).getTime()
+          }
+        }})
       }
     }
   }
@@ -242,7 +272,7 @@ class Home extends Component<Props> {
                 ref={(ref) => this._noteInput = ref}
                 style={[styles.textArea, {maxHeight: textInputHeight}]}
                 onChangeText={this.setNote()}
-                value={this.state.note}
+                value={this.state.note.stored.text}
                 editable={true}
                 autoFocus={this.props.email !== undefined}
                 multiline={true}
@@ -290,7 +320,7 @@ class Home extends Component<Props> {
 
 interface StateProps {
   previewText: string
-  threadNotes: ReadonlyArray<StoredNote>
+  threadNotes: ReadonlyArray<UINote>
   email?: string
   publicNoteUrl?: string
   publishingNote?: boolean
@@ -311,8 +341,8 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 interface DispatchProps {
   removeNote: (block: string) => void
-  publicNote: (note: string) => void
-  submitNote: (note: string) => void
+  publicNote: (text: string) => void
+  submitNote: (note: UINote, text: string) => void
   setEmail: (email: string) => void
   clearPublicNote: () => void
 }
@@ -320,8 +350,8 @@ interface DispatchProps {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     removeNote: (block: string) => { dispatch(MainActions.removeNote(block)) },
-    publicNote: (note: string) => { dispatch(MainActions.publicNote(note)) },
-    submitNote: (note: string) => { dispatch(MainActions.submitNote(note)) },
+    publicNote: (text: string) => { dispatch(MainActions.publicNote(note)) },
+    submitNote: (note: UINote, text: string) => { dispatch(MainActions.submitNote(note, text)) },
     setEmail: (email: string) => { dispatch(MainActions.setEmail(email)) },
     clearPublicNote: () => { dispatch(MainActions.publicNoteComplete()) }
   }

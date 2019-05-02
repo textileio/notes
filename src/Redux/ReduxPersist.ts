@@ -35,12 +35,54 @@ const migrations: MigrationManifest = {
       }
     }
   },
+  2: (persistedState) => {
+    const state = persistedState as any
+    return {
+      ...state,
+      main: {
+        ...state.main,
+        threadNotes: [],
+        migrations: 'private_notes_blob',
+        appThreadMeta: {
+          name: 'private_notes_blob',
+          key: 'io.textile.notes_desktop_primary_v1',
+          schema: {
+            name: 'io.textile.notes_primary_v0.0.1',
+            mill: '/json',
+            json_schema: {
+              definitions: {},
+              type: 'object',
+              title: '',
+              required: ['key', 'text', 'value', 'updated', 'created'],
+              properties: {
+                key: {
+                  type: 'string'
+                },
+                text: {
+                  type: 'string'
+                },
+                value: {
+                  type: 'object'
+                },
+                updated: {
+                  type: 'integer'
+                },
+                created: {
+                  type: 'integer'
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 1,
+  version: 2,
   migrate: createMigrate(migrations, { debug: true })
 }
 
