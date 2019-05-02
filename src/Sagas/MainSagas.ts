@@ -112,7 +112,9 @@ export function * postNoteToThread(action: ActionType<typeof MainActions.submitN
   const { note } = action.payload
   const { block, stored } = note
   const appThread = yield select(MainSelectors.getAppThread)
-  const payload = JSON.stringify(stored)
+  // If we are updating a desktop not, unfortunately we need to drop the robust formatting
+  const storedMinusValue = {...stored, value: {}}
+  const payload = JSON.stringify(storedMinusValue)
   const input = Buffer.from(payload).toString('base64')
   // const input = Buffer.from(action.payload.note.trim()).toString('base64')
   try {
