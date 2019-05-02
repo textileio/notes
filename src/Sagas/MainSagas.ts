@@ -1,25 +1,11 @@
 import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import MainActions, { MainSelectors, StoredNote } from '../Redux/MainRedux'
-import Textile, { IAddThreadConfig, Thread, AddThreadConfig, IFilesList } from '@textile/react-native-sdk'
+import MainActions, { MainSelectors, StoredNote, NoteSchema } from '../Redux/MainRedux'
+import Textile, { IAddThreadConfig, Thread, AddThreadConfig, IFilesList, ThreadList, IThread } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 
 const { PROMISE, API_URL } = Config
-
-const JSON_SCHEMA = {
-  name: 'notes',
-  pin: true,
-  mill: '/blob',
-  plaintext: false
-}
-
-const PUBLIC_SCHEMA = {
-  name: 'public-notes',
-  pin: true,
-  mill: '/blob',
-  plaintext: true
-}
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* mainSagaInit() {
@@ -29,21 +15,28 @@ export function* mainSagaInit() {
     takeLatest('SUBMIT_NOTE', submitNewNote),
     takeLatest('PUBLIC_NOTE', createPublicNote),
     takeLatest('REMOVE_NOTE', removeNote),
-    // takeLatest('PUBLIC_NOTE_SUCCESS', publicNoteSuccess),
     call(uploadAllNotes)
   ])
 }
 
-function * createPrivateThread(name, key) {
+function * getOrCreatePrivateThread() {
   // NOTE: maybe missing toJSON param
+  const appMeta = yield select(MainSelectors.getAppThreadMeta)
+
+  const targetThread = yield call(findExistingThread, appMeta.key)
+  if (targetThread) {
+   yield put(MainActions.getThreadSuccess(targetThread))
+   return
+  }
+
   const schema = {
     id: '',
-    json: JSON.stringify(JSON_SCHEMA),
+    json: JSON.stringify(appMeta.schema),
     preset: AddThreadConfig.Schema.Preset.NONE
   }
   const config: IAddThreadConfig = {
-    key,
-    name,
+    key: appMeta.key,
+    name: appMeta.key,
     type: Thread.Type.PRIVATE,
     sharing: Thread.Sharing.NOT_SHARED,
     schema,
@@ -51,27 +44,26 @@ function * createPrivateThread(name, key) {
     members: []
   }
   const newTarget = yield call(Textile.threads.add, config)
-  // pb.AddThreadConfig.Schema.create()
-  // schema.json = JSON.stringify(JSON_SCHEMA)
-  // const config = pb.AddThreadConfig.create()
-  // config.key = key
-  // config.name = name
-  // config.type = pb.Thread.Type.PRIVATE
-  // config.sharing = pb.Thread.Sharing.NOT_SHARED
-  // config.schema = schema
-  // const newTarget: pb.IThread = yield call(API.threads.add, config)
   yield put(MainActions.getThreadSuccess(newTarget))
 }
 
-function * createPublicThread(name, key) {
+function * getOrCreatePuplicThread() {
+  const publicMeta = yield select(MainSelectors.getPublicThreadMeta)
+
+  const targetThread = yield call(findExistingThread, publicMeta.key)
+  if (targetThread) {
+   yield put(MainActions.getPublicThreadSuccess(targetThread))
+   return
+  }
+
   const schema = {
     id: '',
-    json: JSON.stringify(PUBLIC_SCHEMA),
+    json: JSON.stringify(publicMeta.schema),
     preset: AddThreadConfig.Schema.Preset.NONE
   }
   const config: IAddThreadConfig = {
-    key,
-    name,
+    key: publicMeta.key,
+    name: publicMeta.name,
     type: Thread.Type.OPEN,
     sharing: Thread.Sharing.NOT_SHARED,
     schema,
@@ -83,34 +75,12 @@ function * createPublicThread(name, key) {
   yield put(MainActions.getPublicThreadSuccess(newTarget))
 }
 
-function * getOrCreateThread() {
-  const APP_THREAD_NAME = 'private_notes_blob'
-  const APP_THREAD_KEY = 'textile_notes-primary-blob'
-
-  const PUBLIC_APP_THREAD_NAME = 'public_notes_blob'
-  const PUBLIC_APP_THREAD_KEY = 'textile_public_notes-primary-blob'
+function * getOrCreateThreads() {
   try {
-    const threads = yield call(Textile.threads.list)
-    const target = threads.items.find((thread: Thread) => thread.key === APP_THREAD_KEY)
-    if (!target) {
-      yield call(createPrivateThread, APP_THREAD_NAME, APP_THREAD_KEY)
-    } else {
-      yield put(MainActions.getThreadSuccess(target))
-    }
-
-    const pubTarget = threads.items.find((thread: Thread) => thread.key === PUBLIC_APP_THREAD_KEY)
-    if (!pubTarget) {
-      yield call(createPublicThread, PUBLIC_APP_THREAD_NAME, PUBLIC_APP_THREAD_KEY)
-    } else {
-      yield put(MainActions.getPublicThreadSuccess(pubTarget))
-    }
+    yield call(getOrCreatePrivateThread)
+    yield call(getOrCreatePuplicThread)
   } catch (err) {
-    try {
-      yield call(createPrivateThread, APP_THREAD_NAME, APP_THREAD_KEY)
-      yield call(createPublicThread, PUBLIC_APP_THREAD_NAME, PUBLIC_APP_THREAD_KEY)
-    } finally {
-      // pass
-    }
+
   }
 }
 
@@ -141,12 +111,15 @@ export function * postNoteToThread(action: ActionType<typeof MainActions.submitN
   const appThread = yield select(MainSelectors.getAppThread)
   const input = Buffer.from(action.payload.note.trim()).toString('base64')
   const result = yield call(Textile.files.prepare, input, appThread.id)
-  yield call(Textile.files.add, result.dir, appThread.id)
-  yield call(refreshNotes)
+  try {
+    yield call(Textile.files.add, result.dir, appThread.id)
+    yield call(refreshNotes)
+  } catch (error) {
+  }
 }
 export function * nodeStarted(action: ActionType<typeof MainActions.nodeStarted>) {
   console.info('Running nodeStarted Saga')
-  yield call(getOrCreateThread)
+  yield call(getOrCreateThreads)
   yield put(MainActions.uploadAllNotes())
 }
 
@@ -261,4 +234,9 @@ export function * publishPublicNote(url: string) {
   } catch (error) {
     yield put(MainActions.publicNoteFailure())
   }
+}
+
+export function * findExistingThread(key: string) {
+  const threads: ThreadList = yield call(Textile.threads.list)
+  return threads.items.find((thread: IThread) => thread.key === key)
 }

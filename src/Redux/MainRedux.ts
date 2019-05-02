@@ -2,6 +2,31 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { Thread } from '@textile/react-native-sdk'
 import { RootState } from './Types'
 
+
+
+interface JSONSchema {
+  definitions: any
+  type: string
+  title: string
+  required: string[]
+  properties: any
+}
+
+
+export interface NoteSchema {
+  name: string
+  mill: string
+  pin?: boolean
+  plaintext?: boolean
+  json_schema?: JSONSchema
+}
+
+interface ThreadMeta {
+  name: string
+  key: string
+  schema: NoteSchema
+}
+
 export type NodeState = 'started' | 'stopped'
 
 const actions = {
@@ -32,10 +57,10 @@ const actions = {
   }),
   uploadAllNotes: createAction('UPLOAD_ALL_NOTES'),
   getThreadSuccess: createAction('GET_APP_THREAD_SUCCESS', (resolve) => {
-    return (appThread: pb.IThread) => resolve({ appThread })
+    return (appThread: Thread) => resolve({ appThread })
   }),
   getPublicThreadSuccess: createAction('GET_PUBLIC_THREAD_SUCCESS', (resolve) => {
-    return (publicThread: pb.IThread) => resolve({ publicThread })
+    return (publicThread: Thread) => resolve({ publicThread })
   }),
   setEmail: createAction('SET_EMAIL', (resolve) => {
     return (email: string) => resolve({ email })
@@ -55,17 +80,38 @@ export interface MainState {
   nodeState: NodeState
   threadNotes: ReadonlyArray<StoredNote>
   notes: string[]
+  appThreadMeta: ThreadMeta
+  publicThreadMeta: ThreadMeta
   email?: string
   publicNoteUrl?: string
   publishingNote?: boolean
 }
 
-
 const initialState: MainState = {
   onboarding: true,
   nodeState:  'stopped',
   notes: [],
-  threadNotes: []
+  threadNotes: [],
+  appThreadMeta: {
+    name: 'private_notes_blob',
+    key: 'textile_notes-primary-blob',
+    schema: {
+      name: 'notes',
+      pin: true,
+      mill: '/blob',
+      plaintext: false
+    }
+  },
+  publicThreadMeta: {
+    name: 'public_notes_blob',
+    key: 'textile_public_notes-primary-blob',
+    schema: {
+      name: 'public-notes',
+      pin: true,
+      mill: '/blob',
+      plaintext: true
+    }
+  }
 }
 
 export function reducer(state = initialState, action: MainActions) {
@@ -112,6 +158,8 @@ export const MainSelectors = {
   getPublicThread: (state: RootState) => state.main.publicThread,
   notes: (state: RootState) => state.main.notes,
   email: (state: RootState) => state.main.email,
-  getPublicUrl: (state: RootState) => state.main.publicNoteUrl
+  getPublicUrl: (state: RootState) => state.main.publicNoteUrl,
+  getAppThreadMeta: (state: RootState) => state.main.appThreadMeta,
+  getPublicThreadMeta: (state: RootState) => state.main.publicThreadMeta
 }
 export default actions

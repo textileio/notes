@@ -98,12 +98,11 @@ class Home extends Component<Props> {
     const { item, index } = row
     // todo: indicate which are not sent yet
     try {
-
       return (
         <TouchableOpacity
           style={styles.note}
-          onPress={() => { this.setNoteText(item.text) }}
-          onLongPress={() => { this.removeNote(index, item) }}
+          onPress={this.setNoteText(item.text)}
+          onLongPress={this.removeNote(index, item)}
         >
           <Text style={styles.noteText}>{item.text}</Text>
         </TouchableOpacity>
@@ -114,11 +113,14 @@ class Home extends Component<Props> {
   }
 
   removeNote = (index: number, note: StoredNote) => {
-    this.props.removeNote(note.block)
+    return () => {
+      this.props.removeNote(note.block)
+    }
   }
 
   setNoteText = (text: string) => {
     return () => {
+      console.log(text)
       const keep = this.state.note === '' ? '' : `${this.state.note}\n`
       this.setState({
         note: `${keep}${text}`
@@ -134,10 +136,14 @@ class Home extends Component<Props> {
           data={this.props.threadNotes}
           keyExtractor={this.keyExtractor}
           /* tslint:disable-next-line */
-          renderItem={this.renderNote.bind(this)}
+          renderItem={this.renderNote}
           numColumns={1}
           initialNumToRender={50}
           onEndReachedThreshold={0.55}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          alwaysBounceHorizontal={false}
+          directionalLockEnabled={false}
         />
 
       </View>

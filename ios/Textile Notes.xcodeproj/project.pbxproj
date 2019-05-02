@@ -22,8 +22,11 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		3ADA7CC878FE4CDC842A051D /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 277F2556B92C457192C48FD6 /* libRNBackgroundFetch.a */; };
+		49144EEE744F33FAC582F175 /* libPods-Textile Notes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77A485E57436C61FF00D7F01 /* libPods-Textile Notes.a */; };
 		74AFCD8CBE9E4A6AA9423C1E /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88C11B53611E41DA9F9BCB55 /* libRNBackgroundTimer.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		A2570411227A49AE00D91A27 /* libDoubleConversion.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2570410227A49AE00D91A27 /* libDoubleConversion.a */; };
+		A26DB951227A4A6000867343 /* libdouble-conversion.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DF0FFE72056DD460020B375 /* libdouble-conversion.a */; };
 		A2B317572236B64000BF1C11 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B317562236B64000BF1C11 /* RNBackgroundFetch+AppDelegate.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B71B5258E9F640C9A517090C /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA9793EAE75E462C86E2A11B /* TSBackgroundFetch.framework */; };
@@ -376,15 +379,78 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6E4D259CEF684F6F902F9D00 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
+		77A485E57436C61FF00D7F01 /* libPods-Textile Notes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile Notes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		81911A33554248F79DA271A9 /* RNShakeEvent.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShakeEvent.xcodeproj; path = "../node_modules/react-native-shake/ios/RNShakeEvent.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		85B37D99B0E54FE382DD61AB /* libRNShakeEvent.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShakeEvent.a; sourceTree = "<group>"; };
+		873EB251C9F0C492D5626FD4 /* Pods-Textile Notes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile Notes.debug.xcconfig"; path = "Target Support Files/Pods-Textile Notes/Pods-Textile Notes.debug.xcconfig"; sourceTree = "<group>"; };
 		88C11B53611E41DA9F9BCB55 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
 		98CB1267ADB543149E09E945 /* libReactNativeConfig.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeConfig.a; sourceTree = "<group>"; };
+		A25703CF227A48F000D91A27 /* libDoubleConversion.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDoubleConversion.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A25703D2227A492E00D91A27 /* libDoubleConversion.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDoubleConversion.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A25703D5227A497500D91A27 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		A25703D6227A497500D91A27 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		A25703D8227A497500D91A27 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		A25703DA227A497500D91A27 /* cctest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cctest.h; sourceTree = "<group>"; };
+		A25703DB227A497500D91A27 /* gay-precision.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "gay-precision.cc"; sourceTree = "<group>"; };
+		A25703DC227A497500D91A27 /* test-bignum-dtoa.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-bignum-dtoa.cc"; sourceTree = "<group>"; };
+		A25703DD227A497500D91A27 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		A25703DE227A497500D91A27 /* test-conversions.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-conversions.cc"; sourceTree = "<group>"; };
+		A25703DF227A497500D91A27 /* test-diy-fp.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-diy-fp.cc"; sourceTree = "<group>"; };
+		A25703E0227A497500D91A27 /* gay-shortest.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "gay-shortest.cc"; sourceTree = "<group>"; };
+		A25703E1227A497500D91A27 /* checks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = checks.h; sourceTree = "<group>"; };
+		A25703E2227A497500D91A27 /* gay-precision.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gay-precision.h"; sourceTree = "<group>"; };
+		A25703E3227A497500D91A27 /* test-ieee.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-ieee.cc"; sourceTree = "<group>"; };
+		A25703E4227A497500D91A27 /* gay-shortest-single.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "gay-shortest-single.cc"; sourceTree = "<group>"; };
+		A25703E5227A497500D91A27 /* test-dtoa.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-dtoa.cc"; sourceTree = "<group>"; };
+		A25703E6227A497500D91A27 /* test-fixed-dtoa.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-fixed-dtoa.cc"; sourceTree = "<group>"; };
+		A25703E7227A497500D91A27 /* test-bignum.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-bignum.cc"; sourceTree = "<group>"; };
+		A25703E8227A497500D91A27 /* SConscript */ = {isa = PBXFileReference; lastKnownFileType = text; path = SConscript; sourceTree = "<group>"; };
+		A25703E9227A497500D91A27 /* test-strtod.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-strtod.cc"; sourceTree = "<group>"; };
+		A25703EA227A497500D91A27 /* cctest.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cctest.cc; sourceTree = "<group>"; };
+		A25703EB227A497500D91A27 /* gay-fixed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gay-fixed.h"; sourceTree = "<group>"; };
+		A25703EC227A497500D91A27 /* gay-shortest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gay-shortest.h"; sourceTree = "<group>"; };
+		A25703ED227A497500D91A27 /* test-fast-dtoa.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-fast-dtoa.cc"; sourceTree = "<group>"; };
+		A25703EE227A497500D91A27 /* gay-shortest-single.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gay-shortest-single.h"; sourceTree = "<group>"; };
+		A25703EF227A497500D91A27 /* gay-fixed.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "gay-fixed.cc"; sourceTree = "<group>"; };
+		A25703F0227A497500D91A27 /* SConstruct */ = {isa = PBXFileReference; lastKnownFileType = text; path = SConstruct; sourceTree = "<group>"; };
+		A25703F1227A497500D91A27 /* .installed */ = {isa = PBXFileReference; lastKnownFileType = text; path = .installed; sourceTree = "<group>"; };
+		A25703F2227A497500D91A27 /* Changelog */ = {isa = PBXFileReference; lastKnownFileType = text; path = Changelog; sourceTree = "<group>"; };
+		A25703F3227A497500D91A27 /* AUTHORS */ = {isa = PBXFileReference; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		A25703F4227A497500D91A27 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		A25703F5227A497500D91A27 /* double-conversionConfig.cmake.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = "double-conversionConfig.cmake.in"; sourceTree = "<group>"; };
+		A25703F6227A497500D91A27 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		A25703F7227A497500D91A27 /* COPYING */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		A25703F8227A497500D91A27 /* double-conversionConfigVersion.cmake.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = "double-conversionConfigVersion.cmake.in"; sourceTree = "<group>"; };
+		A25703F9227A497500D91A27 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		A25703FA227A497500D91A27 /* double-conversionBuildTreeSettings.cmake.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = "double-conversionBuildTreeSettings.cmake.in"; sourceTree = "<group>"; };
+		A25703FC227A497500D91A27 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		A25703FD227A497500D91A27 /* bignum.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bignum.cc; sourceTree = "<group>"; };
+		A25703FE227A497500D91A27 /* fixed-dtoa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fixed-dtoa.h"; sourceTree = "<group>"; };
+		A25703FF227A497500D91A27 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		A2570400227A497500D91A27 /* bignum-dtoa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "bignum-dtoa.h"; sourceTree = "<group>"; };
+		A2570401227A497500D91A27 /* fixed-dtoa.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "fixed-dtoa.cc"; sourceTree = "<group>"; };
+		A2570402227A497500D91A27 /* strtod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = strtod.h; sourceTree = "<group>"; };
+		A2570403227A497500D91A27 /* diy-fp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "diy-fp.h"; sourceTree = "<group>"; };
+		A2570404227A497500D91A27 /* strtod.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = strtod.cc; sourceTree = "<group>"; };
+		A2570405227A497500D91A27 /* cached-powers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cached-powers.h"; sourceTree = "<group>"; };
+		A2570406227A497500D91A27 /* double-conversion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "double-conversion.h"; sourceTree = "<group>"; };
+		A2570407227A497500D91A27 /* fast-dtoa.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "fast-dtoa.cc"; sourceTree = "<group>"; };
+		A2570408227A497500D91A27 /* cached-powers.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "cached-powers.cc"; sourceTree = "<group>"; };
+		A2570409227A497500D91A27 /* SConscript */ = {isa = PBXFileReference; lastKnownFileType = text; path = SConscript; sourceTree = "<group>"; };
+		A257040A227A497500D91A27 /* double-conversion.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "double-conversion.cc"; sourceTree = "<group>"; };
+		A257040B227A497500D91A27 /* diy-fp.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "diy-fp.cc"; sourceTree = "<group>"; };
+		A257040C227A497500D91A27 /* ieee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ieee.h; sourceTree = "<group>"; };
+		A257040D227A497500D91A27 /* bignum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bignum.h; sourceTree = "<group>"; };
+		A257040E227A497500D91A27 /* fast-dtoa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fast-dtoa.h"; sourceTree = "<group>"; };
+		A257040F227A497500D91A27 /* bignum-dtoa.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "bignum-dtoa.cc"; sourceTree = "<group>"; };
+		A2570410227A49AE00D91A27 /* libDoubleConversion.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDoubleConversion.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2B317562236B64000BF1C11 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		A2B3175C2236B83B00BF1C11 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
+		A2D72D17227A4483009286ED /* libDoubleConversion.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDoubleConversion.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		EA012B077FE344E8A14FF949 /* Pods-Textile Notes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile Notes.release.xcconfig"; path = "Target Support Files/Pods-Textile Notes/Pods-Textile Notes.release.xcconfig"; sourceTree = "<group>"; };
 		EA9793EAE75E462C86E2A11B /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -395,6 +461,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A26DB951227A4A6000867343 /* libdouble-conversion.a in Frameworks */,
+				A2570411227A49AE00D91A27 /* libDoubleConversion.a in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
@@ -414,6 +482,7 @@
 				B71B5258E9F640C9A517090C /* TSBackgroundFetch.framework in Frameworks */,
 				F678D23F98C446AAAFB9AB12 /* libReactNativeConfig.a in Frameworks */,
 				CEA74F4BEDE4466DA74CAAD0 /* libRNShakeEvent.a in Frameworks */,
+				49144EEE744F33FAC582F175 /* libPods-Textile Notes.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,10 +592,16 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A2570410227A49AE00D91A27 /* libDoubleConversion.a */,
+				A25703D4227A497500D91A27 /* double-conversion-1.1.6 */,
+				A25703D2227A492E00D91A27 /* libDoubleConversion.a */,
+				A25703CF227A48F000D91A27 /* libDoubleConversion.a */,
+				A2D72D17227A4483009286ED /* libDoubleConversion.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				EA9793EAE75E462C86E2A11B /* TSBackgroundFetch.framework */,
+				77A485E57436C61FF00D7F01 /* libPods-Textile Notes.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -547,6 +622,15 @@
 				3DAD3E881DF850E9000B6D8A /* libRCTLinking-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		81FFE0B092E0A0A2A06DDDB9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				873EB251C9F0C492D5626FD4 /* Pods-Textile Notes.debug.xcconfig */,
+				EA012B077FE344E8A14FF949 /* Pods-Textile Notes.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -591,6 +675,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				A28F16DF22259D05001BBEC9 /* Recovered References */,
+				81FFE0B092E0A0A2A06DDDB9 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -611,6 +696,94 @@
 				A21CE4CB2239F05B00F9BB79 /* libRNShakeEvent.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A25703D4227A497500D91A27 /* double-conversion-1.1.6 */ = {
+			isa = PBXGroup;
+			children = (
+				A25703D5227A497500D91A27 /* CMakeLists.txt */,
+				A25703D6227A497500D91A27 /* LICENSE */,
+				A25703D7227A497500D91A27 /* test */,
+				A25703F0227A497500D91A27 /* SConstruct */,
+				A25703F1227A497500D91A27 /* .installed */,
+				A25703F2227A497500D91A27 /* Changelog */,
+				A25703F3227A497500D91A27 /* AUTHORS */,
+				A25703F4227A497500D91A27 /* Makefile */,
+				A25703F5227A497500D91A27 /* double-conversionConfig.cmake.in */,
+				A25703F6227A497500D91A27 /* README */,
+				A25703F7227A497500D91A27 /* COPYING */,
+				A25703F8227A497500D91A27 /* double-conversionConfigVersion.cmake.in */,
+				A25703F9227A497500D91A27 /* .gitignore */,
+				A25703FA227A497500D91A27 /* double-conversionBuildTreeSettings.cmake.in */,
+				A25703FB227A497500D91A27 /* src */,
+			);
+			name = "double-conversion-1.1.6";
+			path = "../node_modules/react-native/third-party/double-conversion-1.1.6";
+			sourceTree = "<group>";
+		};
+		A25703D7227A497500D91A27 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				A25703D8227A497500D91A27 /* CMakeLists.txt */,
+				A25703D9227A497500D91A27 /* cctest */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
+		A25703D9227A497500D91A27 /* cctest */ = {
+			isa = PBXGroup;
+			children = (
+				A25703DA227A497500D91A27 /* cctest.h */,
+				A25703DB227A497500D91A27 /* gay-precision.cc */,
+				A25703DC227A497500D91A27 /* test-bignum-dtoa.cc */,
+				A25703DD227A497500D91A27 /* CMakeLists.txt */,
+				A25703DE227A497500D91A27 /* test-conversions.cc */,
+				A25703DF227A497500D91A27 /* test-diy-fp.cc */,
+				A25703E0227A497500D91A27 /* gay-shortest.cc */,
+				A25703E1227A497500D91A27 /* checks.h */,
+				A25703E2227A497500D91A27 /* gay-precision.h */,
+				A25703E3227A497500D91A27 /* test-ieee.cc */,
+				A25703E4227A497500D91A27 /* gay-shortest-single.cc */,
+				A25703E5227A497500D91A27 /* test-dtoa.cc */,
+				A25703E6227A497500D91A27 /* test-fixed-dtoa.cc */,
+				A25703E7227A497500D91A27 /* test-bignum.cc */,
+				A25703E8227A497500D91A27 /* SConscript */,
+				A25703E9227A497500D91A27 /* test-strtod.cc */,
+				A25703EA227A497500D91A27 /* cctest.cc */,
+				A25703EB227A497500D91A27 /* gay-fixed.h */,
+				A25703EC227A497500D91A27 /* gay-shortest.h */,
+				A25703ED227A497500D91A27 /* test-fast-dtoa.cc */,
+				A25703EE227A497500D91A27 /* gay-shortest-single.h */,
+				A25703EF227A497500D91A27 /* gay-fixed.cc */,
+			);
+			path = cctest;
+			sourceTree = "<group>";
+		};
+		A25703FB227A497500D91A27 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A25703FC227A497500D91A27 /* utils.h */,
+				A25703FD227A497500D91A27 /* bignum.cc */,
+				A25703FE227A497500D91A27 /* fixed-dtoa.h */,
+				A25703FF227A497500D91A27 /* CMakeLists.txt */,
+				A2570400227A497500D91A27 /* bignum-dtoa.h */,
+				A2570401227A497500D91A27 /* fixed-dtoa.cc */,
+				A2570402227A497500D91A27 /* strtod.h */,
+				A2570403227A497500D91A27 /* diy-fp.h */,
+				A2570404227A497500D91A27 /* strtod.cc */,
+				A2570405227A497500D91A27 /* cached-powers.h */,
+				A2570406227A497500D91A27 /* double-conversion.h */,
+				A2570407227A497500D91A27 /* fast-dtoa.cc */,
+				A2570408227A497500D91A27 /* cached-powers.cc */,
+				A2570409227A497500D91A27 /* SConscript */,
+				A257040A227A497500D91A27 /* double-conversion.cc */,
+				A257040B227A497500D91A27 /* diy-fp.cc */,
+				A257040C227A497500D91A27 /* ieee.h */,
+				A257040D227A497500D91A27 /* bignum.h */,
+				A257040E227A497500D91A27 /* fast-dtoa.h */,
+				A257040F227A497500D91A27 /* bignum-dtoa.cc */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		A28096E62236B455000FDCC7 /* Plugins */ = {
@@ -684,6 +857,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Textile Notes" */;
 			buildPhases = (
+				24A924A84418D4C420303843 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1151,6 +1325,28 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		24A924A84418D4C420303843 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Textile Notes-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1181,6 +1377,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 873EB251C9F0C492D5626FD4 /* Pods-Textile Notes.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1189,26 +1386,14 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/**",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-				);
-				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/**",
-					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-					"$(SRCROOT)/../node_modules/react-native-shake/ios",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios",
+					"$(PROJECT_DIR)",
 				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Textile Notes\"",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"\"$(SRCROOT)/Textile Notes\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1222,6 +1407,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA012B077FE344E8A14FF949 /* Pods-Textile Notes.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1229,26 +1415,14 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/**",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-				);
-				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/**",
-					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
-					"$(SRCROOT)/../node_modules/react-native-shake/ios",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios",
+					"$(PROJECT_DIR)",
 				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Textile Notes\"",
-					"$(SRCROOT)/../node_modules/@textile/react-native-sdk/ios/**",
-					"\"$(SRCROOT)/Textile Notes\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1306,7 +1480,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1352,7 +1526,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
