@@ -12,7 +12,7 @@ const { PROMISE, API_URL } = Config
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* mainSagaInit() {
   yield all([
-    fork(initializeTextile),
+    yield call(Textile.initialize, false, false),
     takeLatest('NODE_STARTED', nodeStarted),
     takeLatest('GET_APP_THREAD_SUCCESS', refreshNotes),
     takeLatest('SUBMIT_NOTE', submitNewNote),
@@ -21,17 +21,6 @@ export function* mainSagaInit() {
     takeLatest('NEW_DEEP_LINK', processNewDeepLink),
     call(uploadAllNotes)
   ])
-}
-function * initializeTextile() {
-  try {
-    yield call(Textile.initialize, false, false)
-    // TODO: get rid of the below...
-    yield delay(2000)
-    yield put(MainActions.nodeStarted())
-    yield put(MainActions.newNodeState('started'))
-  } catch (error){
-    console.info(error)
-  }
 }
 
 function * getOrCreatePrivateThread() {
