@@ -1,109 +1,106 @@
-import { takeLatest, fork, put, all, call, take, select, delay } from 'redux-saga/effects'
+import { takeLatest, fork, put, all, call, take, select, delay, takeEvery } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import MainActions, { MainSelectors, StoredNote } from '../Redux/MainRedux'
-import { API, pb } from '@textile/react-native-sdk'
+import MainActions, { MainSelectors, UINote, NoteSchema, ThreadNote } from '../Redux/MainRedux'
+import Textile, { IAddThreadConfig, Thread, AddThreadConfig, IFilesList, ThreadList, IThread } from '@textile/react-native-sdk'
 import { Buffer } from 'buffer'
 import Config from 'react-native-config'
+import { Alert } from 'react-native'
+import { runPendingMigration } from './ThreadMigrationSaga'
 
 const { PROMISE, API_URL } = Config
-
-const JSON_SCHEMA = {
-  name: 'notes',
-  pin: true,
-  mill: '/blob',
-  plaintext: false
-}
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* mainSagaInit() {
   yield all([
+    yield call(Textile.initialize, false, false),
     takeLatest('NODE_STARTED', nodeStarted),
     takeLatest('GET_APP_THREAD_SUCCESS', refreshNotes),
     takeLatest('SUBMIT_NOTE', submitNewNote),
     takeLatest('PUBLIC_NOTE', createPublicNote),
     takeLatest('REMOVE_NOTE', removeNote),
-    // takeLatest('PUBLIC_NOTE_SUCCESS', publicNoteSuccess),
+    takeLatest('NEW_DEEP_LINK', processNewDeepLink),
     call(uploadAllNotes)
   ])
 }
 
-function * createPrivateThread(name, key) {
-  const schema = pb.AddThreadConfig.Schema.create()
-  schema.json = JSON.stringify(JSON_SCHEMA)
-  const config = pb.AddThreadConfig.create()
-  config.key = key
-  config.name = name
-  config.type = pb.Thread.Type.PRIVATE
-  config.sharing = pb.Thread.Sharing.NOT_SHARED
-  config.schema = schema
+function * getOrCreatePrivateThread() {
+  // NOTE: maybe missing toJSON param
+  const appMeta = yield select(MainSelectors.getAppThreadMeta)
+  const targetThread = yield call(findExistingThread, appMeta.key)
+  if (targetThread) {
+   yield put(MainActions.getThreadSuccess(targetThread))
+   return
+  }
 
-  const newTarget: pb.IThread = yield call(API.threads.add, config)
+  const schema = {
+    id: '',
+    json: JSON.stringify(appMeta.schema),
+    preset: AddThreadConfig.Schema.Preset.NONE
+  }
+  const config: IAddThreadConfig = {
+    key: appMeta.key,
+    name: appMeta.key,
+    type: Thread.Type.PRIVATE,
+    sharing: Thread.Sharing.NOT_SHARED,
+    schema,
+    force: false,
+    whitelist: []
+  }
+  const newTarget = yield call(Textile.threads.add, config)
   yield put(MainActions.getThreadSuccess(newTarget))
 }
 
-function * createPublicThread(name, key) {
-  const schema2 = pb.AddThreadConfig.Schema.create()
-  schema2.json = JSON.stringify({
-    name: 'public-notes',
-    pin: true,
-    mill: '/blob',
-    plaintext: true
-  })
-  const config2 = pb.AddThreadConfig.create()
-  config2.key = key
-  config2.name = name
-  config2.type = pb.Thread.Type.OPEN
-  config2.sharing = pb.Thread.Sharing.NOT_SHARED
-  config2.schema = schema2
+function * getOrCreatePublicThread() {
+  const publicMeta = yield select(MainSelectors.getPublicThreadMeta)
 
-  const newTarget2: pb.IThread = yield call(API.threads.add, config2)
-  yield put(MainActions.getPublicThreadSuccess(newTarget2))
+  const targetThread = yield call(findExistingThread, publicMeta.key)
+  if (targetThread) {
+   yield put(MainActions.getPublicThreadSuccess(targetThread))
+   return
+  }
+
+  const schema = {
+    id: '',
+    json: JSON.stringify(publicMeta.schema),
+    preset: AddThreadConfig.Schema.Preset.NONE
+  }
+  const config: IAddThreadConfig = {
+    key: publicMeta.key,
+    name: publicMeta.name,
+    type: Thread.Type.OPEN,
+    sharing: Thread.Sharing.NOT_SHARED,
+    schema,
+    force: false,
+    whitelist: []
+  }
+
+  const newTarget = yield call(Textile.threads.add, config)
+  yield put(MainActions.getPublicThreadSuccess(newTarget))
 }
 
-function * getOrCreateThread() {
-  const APP_THREAD_NAME = 'private_notes_blob'
-  const APP_THREAD_KEY = 'textile_notes-primary-blob'
-
-  const PUBLIC_APP_THREAD_NAME = 'public_notes_blob'
-  const PUBLIC_APP_THREAD_KEY = 'textile_public_notes-primary-blob'
+function * getOrCreateThreads() {
   try {
-    const threads: pb.ThreadList = yield call(API.threads.list)
-    const target = threads.items.find((thread: pb.IThread) => thread.key === APP_THREAD_KEY)
-    if (!target) {
-      yield call(createPrivateThread, APP_THREAD_NAME, APP_THREAD_KEY)
-    } else {
-      yield put(MainActions.getThreadSuccess(target))
-    }
-
-    const pubTarget = threads.items.find((thread: pb.IThread) => thread.key === PUBLIC_APP_THREAD_KEY)
-    if (!pubTarget) {
-      yield call(createPublicThread, PUBLIC_APP_THREAD_NAME, PUBLIC_APP_THREAD_KEY)
-    } else {
-      yield put(MainActions.getPublicThreadSuccess(pubTarget))
-    }
+    yield call(getOrCreatePrivateThread)
+    yield call(getOrCreatePublicThread)
   } catch (err) {
-    try {
-      yield call(createPrivateThread, APP_THREAD_NAME, APP_THREAD_KEY)
-      yield call(createPublicThread, PUBLIC_APP_THREAD_NAME, PUBLIC_APP_THREAD_KEY)
-    } finally {
-      // pass
-    }
+
   }
 }
 
 export function * refreshNotes() {
   const appThread = yield select(MainSelectors.getAppThread)
-  const allNotes: StoredNote[] = []
+  const allNotes: UINote[] = []
   try {
-    const files: pb.IFilesList = yield call(API.files.list, '', -1, appThread.id)
+    const files: IFilesList = yield call(Textile.files.list,  appThread.id, '', -1)
     for (const file of files.items) {
       const block = file.block
       for (const hash of file.files.map((ffs) => ffs.file.hash)) {
-        const data = yield call(API.files.data, hash)
-        const noteText = Buffer.from(data.split(',')[1], 'base64').toString()
+        const data = yield call(Textile.files.data, hash)
+        const json = Buffer.from(data.split(',')[1], 'base64').toString()
+        const note = JSON.parse(json)
         allNotes.push({
           block,
-          text: noteText
+          stored: note
         })
       }
     }
@@ -114,17 +111,37 @@ export function * refreshNotes() {
   }
 }
 
-export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
-  const appThread = yield select(MainSelectors.getAppThread)
-  const input = Buffer.from(action.payload.note.trim()).toString('base64')
-  const result = yield call(API.files.prepareFiles, input, appThread.id)
-  yield call(API.files.add, result.dir, appThread.id)
-  yield call(refreshNotes)
+export function * addToThread(note: ThreadNote, threadId: string) {
+  const payload = JSON.stringify(note)
+  const input = Buffer.from(payload).toString('base64')
+  // const input = Buffer.from(action.payload.note.trim()).toString('base64')
+  const result = yield call(Textile.files.prepare, input, threadId)
+  yield call(Textile.files.add, result.dir, threadId)
 }
+export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
+  const { note } = action.payload
+  const { block, stored } = note
+  const appThread = yield select(MainSelectors.getAppThread)
+  // If we are updating a desktop not, unfortunately we need to drop the robust formatting
+  const storedMinusValue = {...stored, value: {}}
+  try {
+    yield call(addToThread, storedMinusValue, appThread.id)
+    if (block) {
+      yield call(Textile.ignores.add, block)
+    }
+  } catch (error) {
+    console.info(error)
+  } finally {
+    yield call(refreshNotes)
+  }
+}
+
 export function * nodeStarted(action: ActionType<typeof MainActions.nodeStarted>) {
   console.info('Running nodeStarted Saga')
-  yield call(getOrCreateThread)
+  yield call(getOrCreateThreads)
   yield put(MainActions.uploadAllNotes())
+  yield call(runPendingMigration)
+  yield call(refreshNotes)
 }
 
 export function * submitNewNote(action: ActionType<typeof MainActions.submitNote>) {
@@ -138,7 +155,7 @@ export function * submitNewNote(action: ActionType<typeof MainActions.submitNote
 export function * removeNote(action: ActionType<typeof MainActions.removeNote>) {
   const { block } = action.payload
   try {
-    yield call(API.ignores.add, block)
+    yield call(Textile.ignores.add, block)
   } finally {
     yield call(refreshNotes)
   }
@@ -155,7 +172,7 @@ export function * uploadANote(note: string) {
     promise: PROMISE
   }
   try {
-    const response = yield call (fetch, API_URL, {
+    const response = yield call(fetch, API_URL, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -196,15 +213,15 @@ function fakeUUID () {
   })
 }
 
-export function * createPublicNote(action: ActionType<typeof MainActions.submitNote>) {
+export function * createPublicNote(action: ActionType<typeof MainActions.publicNote>) {
   try {
     const publicThread = yield select(MainSelectors.getPublicThread)
     const input = Buffer.from(action.payload.note.trim()).toString('base64')
-    const result = yield call(API.files.prepareFiles, input, publicThread.id)
+    const result = yield call(Textile.files.prepare, input, publicThread.id)
 
-    const block = yield call(API.files.add, result.dir, publicThread.id)
+    const block = yield call(Textile.files.add, result.dir, publicThread.id)
 
-    const files = yield call(API.files.list, '', -1, publicThread.id)
+    const files = yield call(Textile.files.list, publicThread.id, '', -1)
     const latest = files.items.length > 0 ? files.items[0] : undefined
     if (latest) {
       const file = latest.files[0].file
@@ -224,6 +241,38 @@ export function * createPublicNote(action: ActionType<typeof MainActions.submitN
   }
 }
 
+function showSeedAlert() {
+  return new Promise<void>((resolve, reject) => {
+    Alert.alert(
+      'Pair device',
+      'This will clear all locally stored notes',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: reject
+        },
+        {text: 'OK', onPress: resolve}
+      ],
+      {cancelable: false}
+    )
+  })
+}
+
+function * processNewDeepLink(action: ActionType<typeof MainActions.handleNewDeepLink>) {
+  try {
+    const { url } = action.payload
+    const parts = url.split('#')
+    if (url.indexOf('textile.io') >= 0 && parts.length > 1) {
+      const seed = parts[1]
+      yield call(showSeedAlert)
+      console.log('Success', seed)
+    }
+  } catch (error) {
+    console.info('Invalid or rejected invite')
+  }
+}
+
 export function * forkFetch(url: string) {
   const response = yield call(fetch, url)
   if (response.status === 200) {
@@ -238,4 +287,19 @@ export function * publishPublicNote(url: string) {
   } catch (error) {
     yield put(MainActions.publicNoteFailure())
   }
+}
+
+export function * findExistingThread(key: string) {
+  const threads: ThreadList = yield call(Textile.threads.list)
+  return threads.items.find((thread: IThread) => thread.key === key)
+}
+
+export function uuidv4 () {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    /* tslint:disable-next-line */
+    const r = Math.random() * 16 | 0
+    /* tslint:disable-next-line */
+    const v = c == 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
 }

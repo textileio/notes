@@ -6,11 +6,14 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "tsc": "tsc -p . --noEmit",
     "lint": "tslint -c tslint.json --project .",
-    "test": "jest"
+    "test": "jest",
+    "device:ios": "react-native run-ios",
+    "log:device:ios": "react-native log-ios",
+    "pow-ios": "ttab yarn start; ttab yarn device:ios; yarn log:device:ios;"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "@textile/react-native-sdk": "1.1.0-rc45",
+    "@textile/react-native-sdk": "1.2.8",
     "buffer": "^5.2.1",
     "react": "^16.6.3",
     "react-native": "^0.57.2",
@@ -27,7 +30,7 @@
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "redux-saga": "^1.0.1",
-    "typesafe-actions": "^3.0.0"
+    "typesafe-actions": "4.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
