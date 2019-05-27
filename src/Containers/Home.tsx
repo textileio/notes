@@ -39,7 +39,7 @@ class Home extends Component<Props> {
   setNote = () => {
     return (text: string) => {
       const { note } = this.state
-      note.stored.text = text.trim()
+      note.stored.text = text
       note.stored.updated = (new Date()).getTime()
       this.setState({note})
     }
@@ -60,30 +60,34 @@ class Home extends Component<Props> {
     }
   }
 
-  componentWillMount() {
-    RNShake.addEventListener('ShakeEvent', () => {
-      const { note } = this.state
-      if (note.stored.text !== '') {
-        Alert.alert(
-          'Create disappearing IPFS note',
-          'Cannot be undone.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel'
-            },
-            {text: 'Confirm', onPress: () => {
-              this.props.publicNote(note.stored.text)
-            }}
-          ],
-          {cancelable: true}
-        )
-      }
-    })
+  componentWillMount = () => {
+    RNShake.addEventListener('ShakeEvent', this.sendToIPFS)
   }
 
   componentWillUnmount() {
     RNShake.removeEventListener('ShakeEvent')
+  }
+
+  sendToIPFS = () => {
+    const { note } = this.state
+    console.log(note)
+    if (note.stored.text && note.stored.text !== '') {
+      const { text } = note.stored
+      Alert.alert(
+        'Create disappearing IPFS note',
+        'Cannot be undone.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel'
+          },
+          {text: 'Confirm', onPress: () => {
+            this.props.publicNote(text)
+          }}
+        ],
+        {cancelable: true}
+      )
+    }
   }
 
   saveEmail = () => {
@@ -344,7 +348,7 @@ interface DispatchProps {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     removeNote: (block: string) => { dispatch(MainActions.removeNote(block)) },
-    publicNote: (text: string) => { dispatch(MainActions.publicNote(note)) },
+    publicNote: (text: string) => { dispatch(MainActions.publicNote(text)) },
     submitNote: (note: UINote, text: string) => { dispatch(MainActions.submitNote(note, text)) },
     setEmail: (email: string) => { dispatch(MainActions.setEmail(email)) },
     clearPublicNote: () => { dispatch(MainActions.publicNoteComplete()) }
