@@ -22,7 +22,7 @@ export function * runPendingMigration() {
       return
     }
     const pageSize = 1000
-    const files: FilesList = yield call(Textile.files.list, '', pageSize, oldThread.id)
+    const files: FilesList = yield call(Textile.files.list, oldThread.id, '', pageSize)
     if (files.items.length === 0) {
       yield put(MainActions.migrationSuccess())
       return

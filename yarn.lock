@@ -694,19 +694,19 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.0.0.tgz#9342b7eb52ed3c903e122841407d4984b7338339"
 
-"@textile/js-types@0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.11.tgz#650247c092cec006634fa5bcb3d199d15e18050d"
-  integrity sha512-mwROfSeR78R5t2M9HfcSFxVUEiYF/u/6ar2j7QNdDG3ALY7RhU8uXzVdFSNUG81I6hEpL2K5jAK05HSOJaiYwQ==
+"@textile/js-types@0.1.14":
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.14.tgz#ba4002c2ca43968413ba9670a6e54c1fd20d32f9"
+  integrity sha512-9d4hKDejLL4RWjbxnRfRe6LbWGdvfrLd7K21DfaP465knjG5PIkSIdbNZqeYVjUgh78rPZxWwJyY+tgIvWpNzQ==
   dependencies:
     protobufjs "^6.8.8"
 
-"@textile/react-native-sdk@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.0.tgz#4a99bd35c77d08e8f1bee5970cedd34b115471bd"
-  integrity sha512-Nkz5y9TT8meBiqH6xegSBXjzf6MHfJf0Vzqg7xbgNxXRD/GzTj5pXpV5AT/PcWOKpifssU7tVTrPLhDcSstMig==
+"@textile/react-native-sdk@1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.8.tgz#01bd975fa3e94fa07ecd50149825f7b20d56e9ed"
+  integrity sha512-VsnqaPARJFrOpEMYUKeZLJe/d1U/yw2uu9ELYN7PtqWKFEq7JN6ZoBgfg+bBbpWZYz7jHEKgVpNZlzqzm6iIZQ==
   dependencies:
-    "@textile/js-types" "0.1.11"
+    "@textile/js-types" "0.1.14"
     buffer "^5.2.1"
 
 "@types/cheerio@*":

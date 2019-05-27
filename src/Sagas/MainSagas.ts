@@ -44,7 +44,7 @@ function * getOrCreatePrivateThread() {
     sharing: Thread.Sharing.NOT_SHARED,
     schema,
     force: false,
-    members: []
+    whitelist: []
   }
   const newTarget = yield call(Textile.threads.add, config)
   yield put(MainActions.getThreadSuccess(newTarget))
@@ -71,7 +71,7 @@ function * getOrCreatePublicThread() {
     sharing: Thread.Sharing.NOT_SHARED,
     schema,
     force: false,
-    members: []
+    whitelist: []
   }
 
   const newTarget = yield call(Textile.threads.add, config)
@@ -91,7 +91,7 @@ export function * refreshNotes() {
   const appThread = yield select(MainSelectors.getAppThread)
   const allNotes: UINote[] = []
   try {
-    const files: IFilesList = yield call(Textile.files.list, '', -1, appThread.id)
+    const files: IFilesList = yield call(Textile.files.list,  appThread.id, '', -1)
     for (const file of files.items) {
       const block = file.block
       for (const hash of file.files.map((ffs) => ffs.file.hash)) {
@@ -221,7 +221,7 @@ export function * createPublicNote(action: ActionType<typeof MainActions.publicN
 
     const block = yield call(Textile.files.add, result.dir, publicThread.id)
 
-    const files = yield call(Textile.files.list, '', -1, publicThread.id)
+    const files = yield call(Textile.files.list, publicThread.id, '', -1)
     const latest = files.items.length > 0 ? files.items[0] : undefined
     if (latest) {
       const file = latest.files[0].file
