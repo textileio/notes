@@ -16,4 +16,8 @@
 #   public *;
 #}
 
+-ignorewarnings
 -keep class io.textile.notes.BuildConfig { *; }
+-keep class * {
+    public private *;
+}

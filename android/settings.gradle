@@ -1,4 +1,4 @@
-rootProject.name = 'Textile Notes'
+rootProject.name = 'noet.io'
 include ':@textile_react-native-sdk'
 project(':@textile_react-native-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-sdk/android')
 include ':react-native-shake'
