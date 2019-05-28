@@ -32,6 +32,9 @@ allprojects {
         maven {
             url "$rootDir/../node_modules/react-native-background-fetch/android/libs"
         }
+        maven {
+          url "https://dl.bintray.com/textile/maven"
+        }
     }
 }
 
