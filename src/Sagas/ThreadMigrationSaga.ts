@@ -29,7 +29,7 @@ export function * runPendingMigration() {
     }
     for (const file of files.items) {
       for (const hash of file.files.map((ffs) => ffs.file.hash)) {
-        const data = yield call(Textile.files.data, hash)
+        const data = yield call(Textile.files.content, hash)
         const noteText = Buffer.from(data.split(',')[1], 'base64').toString()
         const created: number = file.date.seconds as number
         const updated: number = file.date.seconds as number
@@ -45,6 +45,7 @@ export function * runPendingMigration() {
           yield call(Textile.ignores.add, file.block) // ensures it doesn't get migrated if we restart
         } catch (error) {
           // ignore for now
+          console.error(error)
         }
       }
     }
@@ -52,5 +53,6 @@ export function * runPendingMigration() {
     yield put(MainActions.migrationSuccess())
   } catch (error) {
     // pass for now
+    console.error(error)
   }
 }

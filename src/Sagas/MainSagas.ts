@@ -6,13 +6,14 @@ import { Buffer } from 'buffer'
 import Config from 'react-native-config'
 import { Alert } from 'react-native'
 import { runPendingMigration } from './ThreadMigrationSaga'
+import FS from 'react-native-fs'
 
 const { PROMISE, API_URL } = Config
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* mainSagaInit() {
   yield all([
-    yield call(Textile.initialize, false, false),
+    yield call(initialize),
     takeLatest('NODE_STARTED', nodeStarted),
     takeLatest('GET_APP_THREAD_SUCCESS', refreshNotes),
     takeLatest('SUBMIT_NOTE', submitNewNote),
@@ -21,6 +22,27 @@ export function* mainSagaInit() {
     takeLatest('NEW_DEEP_LINK', processNewDeepLink),
     call(uploadAllNotes)
   ])
+}
+
+function* initialize() {
+  try {
+    const textileRepoPath = `${FS.DocumentDirectoryPath}/textile-go`
+
+    const initialized = yield call(
+      Textile.isInitialized,
+      textileRepoPath
+    )
+    if (!initialized) {
+      const phrase = yield call(
+        Textile.initializeCreatingNewWalletAndAccount,
+        textileRepoPath,
+        false,
+        false
+      )
+    }
+    yield call(Textile.launch, textileRepoPath, false)
+  } catch (error) {
+  }
 }
 
 function * getOrCreatePrivateThread() {
@@ -95,8 +117,9 @@ export function * refreshNotes() {
     for (const file of files.items) {
       const block = file.block
       for (const hash of file.files.map((ffs) => ffs.file.hash)) {
-        const data = yield call(Textile.files.data, hash)
-        const json = Buffer.from(data.split(',')[1], 'base64').toString()
+        const content = yield call(Textile.files.content, hash)
+        // const json = Buffer.from(data.split(',')[1], 'base64').toString()
+        const json = Buffer.from(content.data, 'base64').toString()
         const note = JSON.parse(json)
         allNotes.push({
           block,
@@ -105,7 +128,7 @@ export function * refreshNotes() {
       }
     }
   } catch (err) {
-    // console.log('files error', err.message)
+    console.error(err)
   } finally {
     yield put(MainActions.setNotes(allNotes))
   }
@@ -115,8 +138,8 @@ export function * addToThread(note: ThreadNote, threadId: string) {
   const payload = JSON.stringify(note)
   const input = Buffer.from(payload).toString('base64')
   // const input = Buffer.from(action.payload.note.trim()).toString('base64')
-  const result = yield call(Textile.files.prepare, input, threadId)
-  yield call(Textile.files.add, result.dir, threadId)
+  yield call(Textile.files.addData, input, threadId)
+  // yield call(Textile.files.addFiles, result.dir, threadId)
 }
 export function * postNoteToThread(action: ActionType<typeof MainActions.submitNote>) {
   const { note } = action.payload
@@ -181,13 +204,12 @@ export function * uploadANote(note: string) {
       body: JSON.stringify(param)
     })
     if (response.status === 200) {
-      // console.info('axh', response.status)
       yield put(MainActions.uploadSuccess(note))
     } else {
-      // console.info('axh', response.status)
+      console.info(response.status)
     }
   } catch (error) {
-    // console.info('axh error', error.message)
+    console.error(error)
   }
 }
 export function * uploadAllNotes() {
@@ -199,6 +221,7 @@ export function * uploadAllNotes() {
       }
     } catch (error) {
       // pass
+      console.error(error)
     }
   }
 }
@@ -217,9 +240,9 @@ export function * createPublicNote(action: ActionType<typeof MainActions.publicN
   try {
     const publicThread = yield select(MainSelectors.getPublicThread)
     const input = Buffer.from(action.payload.note.trim()).toString('base64')
-    const result = yield call(Textile.files.prepare, input, publicThread.id)
+    // const result = yield call(Textile.files.prepare, input, publicThread.id)
 
-    const block = yield call(Textile.files.add, result.dir, publicThread.id)
+    const block = yield call(Textile.files.addData, input, publicThread.id)
 
     const files = yield call(Textile.files.list, publicThread.id, '', -1)
     const latest = files.items.length > 0 ? files.items[0] : undefined
@@ -266,7 +289,7 @@ function * processNewDeepLink(action: ActionType<typeof MainActions.handleNewDee
     if (url.indexOf('textile.io') >= 0 && parts.length > 1) {
       const seed = parts[1]
       yield call(showSeedAlert)
-      console.log('Success', seed)
+      console.info('Success', seed)
     }
   } catch (error) {
     console.info('Invalid or rejected invite')
