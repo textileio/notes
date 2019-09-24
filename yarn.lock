@@ -734,19 +734,19 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.0.0.tgz#9342b7eb52ed3c903e122841407d4984b7338339"
 
-"@textile/js-types@0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.1.14.tgz#ba4002c2ca43968413ba9670a6e54c1fd20d32f9"
-  integrity sha512-9d4hKDejLL4RWjbxnRfRe6LbWGdvfrLd7K21DfaP465knjG5PIkSIdbNZqeYVjUgh78rPZxWwJyY+tgIvWpNzQ==
+"@textile/js-types@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.7.1.tgz#e5c0f96403d5e764e80c8064491ad307dd92c993"
+  integrity sha512-vk7Lg+l8X1CF4p84c9E1QY2ahrp+tDlQYB98Aw/CJGvDDXFEXeAMjJM+NccdxmbXy9nYoxjb6jdVNKOHQeJNDg==
   dependencies:
     protobufjs "^6.8.8"
 
-"@textile/react-native-sdk@1.2.8":
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.8.tgz#01bd975fa3e94fa07ecd50149825f7b20d56e9ed"
-  integrity sha512-VsnqaPARJFrOpEMYUKeZLJe/d1U/yw2uu9ELYN7PtqWKFEq7JN6ZoBgfg+bBbpWZYz7jHEKgVpNZlzqzm6iIZQ==
+"@textile/react-native-sdk@3.0.12":
+  version "3.0.12"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-3.0.12.tgz#b25fb298a890d16c9dac9bb28a0b08508cdc50d6"
+  integrity sha512-MguUOZF0K7J4wlrKL6M0sLcSaQUBWMqQvgBDTiibV1mIx+RdThf1ZylnNvDfhouVE0PvyUbq/Hn9cPUpuVmqUg==
   dependencies:
-    "@textile/js-types" "0.1.14"
+    "@textile/js-types" "0.7.1"
     buffer "^5.2.1"
 
 "@types/cheerio@*":
@@ -4949,10 +4949,10 @@ react-native-typography@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/react-native-typography/-/react-native-typography-1.4.0.tgz#166b79c618075882d8af07720649f5bc6523160d"
 
-react-native@^0.59.8:
-  version "0.59.8"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.8.tgz#ade4141c777c60f5ec4889d9811d0f80a9d56547"
-  integrity sha512-x1T+/pEXrjgdH9uDzd5doJy5aFlBqW04j7ljDKIGALchhnvdFbtXXrUZ/1PfWHMrIdZxtaDt4tkSttp662GSQA==
+react-native@^0.59.9:
+  version "0.59.10"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.10.tgz#352f381e382f93a0403be499c9e384bf51c2591c"
+  integrity sha512-guB9YW+pBqS1dnfZ4ntzjINopiCUAbdmshU2wMWD1W32fRczLAopi/7Q2iHKP8LTCdxuYZV3fa9Mew5PSuANAw==
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@react-native-community/cli" "^1.2.1"
